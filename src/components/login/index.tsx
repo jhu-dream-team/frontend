@@ -1,6 +1,6 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
-//const style = require("./styles.scss");
+const style = require("./styles.scss");
 
 @inject("authStore")
 @observer
@@ -30,23 +30,33 @@ class Login extends React.Component<any, any> {
     const { error, values } = this.props.authStore;
 
     return (
-      <div>
-        <h1> Login </h1>
-        <p>Username</p>
-        <input
-          value={values.username}
-          onChange={event => this.handleUsername(event)}
-        />
-        <p>Password</p>
-        <input
-          type="password"
-          value={values.password}
-          onChange={event => this.handlePassword(event)}
-        />
-        <button type="submit" onClick={event => this.onSubmit(event)}>
-          Log In
-        </button>
-        <p>{error}</p>
+      <div className={style["login_page"]}>
+        <div className={style["login_box"]}>
+          <p className={style["login_title"]}>Please login</p>
+          <input
+            className={style["login_input"]}
+            value={values.username}
+            placeholder={"Username"}
+            onChange={event => this.handleUsername(event)}
+          />
+          <input
+            className={style["login_input"]}
+            type="password"
+            placeholder={"Password"}
+            value={values.password}
+            onChange={event => this.handlePassword(event)}
+          />
+          {error != null ? (
+            <p className={style["login_error"]}>Error: {error}</p>
+          ) : null}
+          <button
+            className={style["login_button"]}
+            type="submit"
+            onClick={event => this.onSubmit(event)}
+          >
+            Login
+          </button>
+        </div>
       </div>
     );
   }
