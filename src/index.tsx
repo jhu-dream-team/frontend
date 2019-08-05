@@ -1,11 +1,13 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { HashRouter } from 'react-router-dom';
 require("./styles/index.scss");
 
 import App from './components/app';
-import Login from './components/login';
 
 ReactDOM.render (
-  <Login />,
+  <HashRouter>
+    <App />
+  </HashRouter>,
   document.getElementById("root")
 );
