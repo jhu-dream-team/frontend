@@ -1,4 +1,5 @@
 import * as React from 'react';
+//import LoginService from "../../services";
 //const style = require("./styles.scss");
 
 class Login extends React.Component<any, any> {
@@ -32,6 +33,7 @@ class Login extends React.Component<any, any> {
             <input value={this.state.username} onChange={(event) => this.onChangeInput("username", event)}/>
 	    <p>Password</p>
             <input type="password" value={this.state.passsword} onChange={(event) => this.onChangeInput("password", event)}/>
+            <button onClick={() => this.props.handleTestVar("hello")}>Click Me</button>
           </div>
         );
     }
