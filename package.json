@@ -26,6 +26,8 @@
     "@types/react-dom": "^16.8.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-router": "^5.0.1",
+    "react-router-dom": "^5.0.1",
     "socket.io-client": "^2.2.0",
     "webpack-dev-server": "^3.7.2"
   }
