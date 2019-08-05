@@ -6,6 +6,6 @@ import App from './components/app';
 import Login from './components/login';
 
 ReactDOM.render (
-  <Login />,
+  <App />,
   document.getElementById("root")
 );
