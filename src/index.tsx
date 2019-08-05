@@ -1,13 +1,21 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import { HashRouter } from 'react-router-dom';
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { HashRouter } from "react-router-dom";
+import { Provider } from "mobx-react";
+import authStore from "./store/auth";
 require("./styles/index.scss");
 
-import App from './components/app';
+const stores = {
+  authStore
+};
 
-ReactDOM.render (
+import App from "./components/app";
+
+ReactDOM.render(
   <HashRouter>
-    <App />
+    <Provider {...stores}>
+      <App />
+    </Provider>
   </HashRouter>,
   document.getElementById("root")
 );
