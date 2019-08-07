@@ -142,6 +142,10 @@ class Home extends React.Component<any, any> {
     });
   }
 
+  goToGame(id) {
+    this.props.history.replace("/game/" + id);
+  }
+
   async handleGameStart(id) {
     var result = await this.game_service
       .start_game(id)
@@ -234,7 +238,9 @@ class Home extends React.Component<any, any> {
                         {!x.players.includes(this.props.userStore.user_id) ? (
                           <Button>Join</Button>
                         ) : x.state == "STARTED" ? (
-                          <Button>Enter</Button>
+                          <Button onClick={() => this.goToGame(x.id)}>
+                            Enter
+                          </Button>
                         ) : x.owner == this.props.userStore.user_id ? (
                           <Button
                             primary

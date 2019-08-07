@@ -4,7 +4,8 @@ import { Menu } from "semantic-ui-react";
 export default class Header extends React.Component<any, any> {
   state = { activeItem: "home" };
 
-  handleItemClick = (e, { name }) => {
+  handleItemClick = name => {
+    window.location.replace("/");
     this.setState({ activeItem: name });
   };
 
@@ -16,7 +17,7 @@ export default class Header extends React.Component<any, any> {
         <Menu.Item
           name="home"
           active={activeItem === "home"}
-          onClick={this.handleItemClick}
+          onClick={() => this.handleItemClick("home")}
         />
       </Menu>
     );

@@ -3,6 +3,7 @@ import { Switch, Route } from "react-router-dom";
 import PrivateRoute from "../private_route";
 import Home from "../home";
 import Login from "../login";
+import GameUI from "../game_ui";
 import { inject, observer } from "mobx-react";
 import Header from "../header";
 import UserService from "../../services/user";
@@ -40,6 +41,12 @@ class App extends React.Component<any, any> {
             exact
             path="/"
             component={Home}
+          />
+          <PrivateRoute
+            authenticated={this.props.authStore.isAuthenticated}
+            exact={false}
+            path="/game/:id"
+            component={GameUI}
           />
           <Route path="/login" component={Login} />
         </Switch>
