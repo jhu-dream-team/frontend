@@ -5,12 +5,29 @@ import Home from "../home";
 import Login from "../login";
 import { inject, observer } from "mobx-react";
 import Header from "../header";
+import UserService from "../../services/user";
 
-@inject("authStore")
+@inject("authStore", "userStore")
 @observer
 class App extends React.Component<any, any> {
+  private user_service;
+
   constructor(props) {
     super(props);
+    this.state = {
+      username: null,
+      user_id: null
+    };
+    this.user_service = new UserService(
+      "http://localhost:5000",
+      props.authStore
+    );
+  }
+
+  async componentDidMount() {
+    if (this.props.authStore.isAuthenticated) {
+      this.props.userStore.get_info(this.props.authStore);
+    }
   }
 
   render() {

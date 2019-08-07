@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Menu } from "semantic-ui-react";
-import { Link } from "react-router-dom";
 
 export default class Header extends React.Component<any, any> {
   state = { activeItem: "home" };

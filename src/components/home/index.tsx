@@ -7,7 +7,7 @@ import GameService from "../../services/game";
 const style = require("./styles.scss");
 
 @observer
-@inject("authStore")
+@inject("authStore", "userStore")
 class Home extends React.Component<any, any> {
   private socket;
   private game_service;
@@ -92,13 +92,17 @@ class Home extends React.Component<any, any> {
           <Table.Body>
             {this.state.games.length > 0
               ? this.state.games.map(x => {
+                  console.log(x);
                   return (
                     <Table.Row>
                       <Table.Cell>{x.name}</Table.Cell>
                       <Table.Cell>{x.state}</Table.Cell>
                       <Table.Cell>
-                        <Button>Join</Button>
-                        <Button>Enter</Button>
+                        {!x.players.includes(this.props.userStore.user_id) ? (
+                          <Button>Join</Button>
+                        ) : (
+                          <Button>Enter</Button>
+                        )}
                       </Table.Cell>
                     </Table.Row>
                   );
