@@ -12,6 +12,7 @@ const PrivateRoute = observer(
     exact: any;
     path: any;
   }) => {
+    console.log(rest);
     return (
       <Route
         {...rest}

@@ -4,6 +4,7 @@ import PrivateRoute from "../private_route";
 import Home from "../home";
 import Login from "../login";
 import { inject, observer } from "mobx-react";
+import Header from "../header";
 
 @inject("authStore")
 @observer
@@ -15,6 +16,7 @@ class App extends React.Component<any, any> {
   render() {
     return (
       <div>
+        {this.props.authStore.isAuthenticated ? <Header /> : null}
         <Switch>
           <PrivateRoute
             authenticated={this.props.authStore.isAuthenticated}

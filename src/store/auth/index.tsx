@@ -1,13 +1,14 @@
 import { computed, observable, action } from "mobx";
+import { persist } from "mobx-persist";
 import makeInspectable from "mobx-devtools-mst";
 import LoginService from "../../services/login";
 
 class AuthStore {
-  @observable authorization = null;
-  @observable refresh = null;
-  @observable error = null;
+  @persist @observable authorization = null;
+  @persist @observable refresh = null;
+  @persist @observable error = null;
 
-  @observable values = {
+  @persist("object") @observable values = {
     username: "",
     password: "",
     email: ""
@@ -25,7 +26,8 @@ class AuthStore {
         this.error = err.message;
       });
     if (result != undefined) {
-      this.setAuthToken(result["authorization_token"]);
+      console.log(result);
+      this.setAuthToken(result["access_token"]);
       this.setRefreshToken(result["refresh_token"]);
     }
   }
@@ -35,7 +37,7 @@ class AuthStore {
   }
 
   @action setRefreshToken(token) {
-    this.authorization = token;
+    this.refresh = token;
   }
 
   @action setUsername(username) {

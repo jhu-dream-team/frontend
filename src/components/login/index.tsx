@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Container, Button, Form } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
 const style = require("./styles.scss");
 
@@ -31,32 +32,39 @@ class Login extends React.Component<any, any> {
 
     return (
       <div className={style["login_page"]}>
-        <div className={style["login_box"]}>
-          <p className={style["login_title"]}>Please login</p>
-          <input
-            className={style["login_input"]}
-            value={values.username}
-            placeholder={"Username"}
-            onChange={event => this.handleUsername(event)}
-          />
-          <input
-            className={style["login_input"]}
-            type="password"
-            placeholder={"Password"}
-            value={values.password}
-            onChange={event => this.handlePassword(event)}
-          />
-          {error != null ? (
-            <p className={style["login_error"]}>Error: {error}</p>
-          ) : null}
-          <button
-            className={style["login_button"]}
-            type="submit"
-            onClick={event => this.onSubmit(event)}
-          >
-            Login
-          </button>
-        </div>
+        <Container>
+          <Form className={style["login_box"]}>
+            <Form.Field>
+              <label>Username</label>
+              <input
+                className={style["login_input"]}
+                value={values.username}
+                placeholder={"Username"}
+                onChange={event => this.handleUsername(event)}
+              />
+            </Form.Field>
+            <Form.Field>
+              <label>Password</label>
+              <input
+                className={style["login_input"]}
+                type="password"
+                placeholder={"Password"}
+                value={values.password}
+                onChange={event => this.handlePassword(event)}
+              />
+            </Form.Field>
+            {error != null ? (
+              <p className={style["login_error"]}>Error: {error}</p>
+            ) : null}
+            <button
+              className={style["login_button"]}
+              type="submit"
+              onClick={event => this.onSubmit(event)}
+            >
+              Login
+            </button>
+          </Form>
+        </Container>
       </div>
     );
   }
