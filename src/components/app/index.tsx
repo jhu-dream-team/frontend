@@ -25,8 +25,11 @@ class App extends React.Component<any, any> {
     );
   }
 
-  async componentDidMount() {
-    if (this.props.authStore.isAuthenticated) {
+  async componentDidUpdate() {
+    if (
+      this.props.authStore.isAuthenticated &&
+      this.props.userStore.user_id == null
+    ) {
       this.props.userStore.get_info(this.props.authStore);
     }
   }

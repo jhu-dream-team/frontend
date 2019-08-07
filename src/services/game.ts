@@ -62,4 +62,16 @@ export default class GameService {
       });
     return result.data;
   }
+
+  public async get_game(id) {
+    const result = await axios
+      .get(this.url + "/game/" + id, {
+        headers: { Authorization: "Bearer " + this.store.authorization }
+      })
+      .catch(err => {
+        console.log(err);
+        throw err;
+      });
+    return result.data;
+  }
 }
