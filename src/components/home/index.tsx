@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Button, Table } from "semantic-ui-react";
 import * as socket_io from "socket.io-client";
 import { Socket } from "net";
 import { inject, observer } from "mobx-react";
@@ -16,7 +17,8 @@ class Home extends React.Component<any, any> {
     this.state = {
       connected: false,
       message: "",
-      messages: []
+      messages: [],
+      games: []
     };
     this.socket = socket_io("http://localhost:5000");
     this.socket.on("connect", () => {
@@ -49,8 +51,13 @@ class Home extends React.Component<any, any> {
     );
   }
 
-  componentDidMount() {
-    this.game_service.get_games();
+  async componentDidMount() {
+    var result = await this.game_service.get_games().catch(err => {
+      console.log(err);
+    });
+    this.setState({ ...this.state, games: result["data"] }, () =>
+      console.log(this.state)
+    );
   }
 
   onChangeMessage(message) {
@@ -74,15 +81,31 @@ class Home extends React.Component<any, any> {
     return (
       <div>
         <h1 className={style["title"]}> Welcome to Wheel of Jeopardy </h1>
-        {this.state.connected ? (
-          <div>
-            <input onChange={event => this.onChangeMessage(event)} />
-            <button onClick={() => this.message()}>Message</button>
-          </div>
-        ) : null}
-        {this.state.messages.map((msg, idx) => (
-          <li key={idx}>{msg}</li>
-        ))}
+        <Table celled>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Name</Table.HeaderCell>
+              <Table.HeaderCell>Status</Table.HeaderCell>
+              <Table.HeaderCell>Actions</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {this.state.games.length > 0
+              ? this.state.games.map(x => {
+                  return (
+                    <Table.Row>
+                      <Table.Cell>{x.name}</Table.Cell>
+                      <Table.Cell>{x.state}</Table.Cell>
+                      <Table.Cell>
+                        <Button>Join</Button>
+                        <Button>Enter</Button>
+                      </Table.Cell>
+                    </Table.Row>
+                  );
+                })
+              : null}
+          </Table.Body>
+        </Table>
       </div>
     );
   }
