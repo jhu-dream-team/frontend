@@ -9,9 +9,9 @@ require("./styles/index.scss");
 
 const hydrate = create();
 
-hydrate("auth", authStore).then(() => console.log(authStore));
+hydrate("auth", authStore);
 
-hydrate("user", userStore).then(() => console.log(userStore));
+hydrate("user", userStore);
 
 const stores = {
   authStore,
