@@ -22,10 +22,17 @@
     "webpack-cli": "^3.3.6"
   },
   "dependencies": {
+    "@popmotion/popcorn": "^0.4.2",
     "@types/react": "^16.8.23",
     "@types/react-dom": "^16.8.4",
+    "d3-shape": "^1.3.5",
+    "randomcolor": "^0.5.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-dropdown": "^1.6.4",
+    "react-native": "^0.60.4",
+    "react-table": "^6.10.0",
+    "react-tabs": "^3.0.0",
     "socket.io-client": "^2.2.0",
     "webpack-dev-server": "^3.7.2"
   }
