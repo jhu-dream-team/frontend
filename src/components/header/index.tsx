@@ -13,12 +13,14 @@ export default class Header extends React.Component<any, any> {
     const { activeItem } = this.state;
 
     return (
-      <Menu secondary>
+      <Menu>
         <Menu.Item
           name="home"
           active={activeItem === "home"}
           onClick={() => this.handleItemClick("home")}
-        />
+        >
+          Home
+        </Menu.Item>
       </Menu>
     );
   }

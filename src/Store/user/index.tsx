@@ -1,7 +1,7 @@
 import { computed, observable, action } from "mobx";
 import { persist } from "mobx-persist";
 import makeInspectable from "mobx-devtools-mst";
-import UserService from "../../services/user";
+import UserService from "../../Services/user";
 
 class AuthStore {
   @persist @observable username = null;

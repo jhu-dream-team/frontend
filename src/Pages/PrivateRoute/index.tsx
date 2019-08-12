@@ -1,23 +1,14 @@
 import * as React from "react";
 import { Route, Redirect } from "react-router";
-import { observer } from "mobx-react";
+import { observer, inject } from "mobx-react";
 
-const PrivateRoute = observer(
-  ({
-    component: Component,
-    ...rest
-  }: {
-    authenticated: any;
-    component: any;
-    exact: any;
-    path: any;
-  }) => {
-    console.log(rest);
+const PrivateRoute = inject("authStore")(
+  observer(({ component: Component, ...rest }) => {
     return (
       <Route
         {...rest}
         render={(props: any) =>
-          rest.authenticated ? (
+          rest.authStore.isAuthenticated ? (
             <Component {...props} />
           ) : (
             <Redirect to="/login" />
@@ -25,7 +16,7 @@ const PrivateRoute = observer(
         }
       />
     );
-  }
+  })
 );
 
 export default PrivateRoute;

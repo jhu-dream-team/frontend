@@ -1,7 +1,7 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
-import GameService from "../../services/game";
-import QuestionService from "../../services/question";
+import GameService from "../../Services/game";
+import QuestionService from "../../Services/question";
 
 @observer
 @inject("authStore")
