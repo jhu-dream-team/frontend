@@ -10,8 +10,8 @@ import {
 import { inject, observer } from "mobx-react";
 const style = require("./styles.scss");
 
-@observer
 @inject("gameStore")
+@observer
 class Home extends React.Component<any, any> {
   constructor(props) {
     super(props);
