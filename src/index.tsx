@@ -4,18 +4,14 @@ import { HashRouter as Router } from "react-router-dom";
 import { Provider } from "mobx-react";
 import { create } from "mobx-persist";
 import authStore from "./Store/auth";
-import userStore from "./Store/user";
+import gameStore from "./Store/game";
 require("./Assets/styles/index.scss");
 
 const hydrate = create();
 
-hydrate("auth", authStore);
-
-hydrate("user", userStore);
-
 const stores = {
   authStore,
-  userStore
+  gameStore
 };
 
 import App from "./App";

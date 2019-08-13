@@ -9,7 +9,7 @@ import Header from "./components/header";
 import Page404 from "./Pages/404";
 import SignUp from "./Authentication/Signup";
 
-@inject("authStore", "userStore")
+@inject("authStore")
 @observer
 class App extends React.Component<any, any> {
   constructor(props) {

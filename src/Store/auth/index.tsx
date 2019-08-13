@@ -45,6 +45,21 @@ class AuthStore {
         }
       }
     }, 1000);
+
+    setInterval(() => {
+      if (firebase.auth().currentUser != null) {
+        return firebase
+          .auth()
+          .currentUser.getIdToken(true)
+          .then(token => {
+            if (token != localStorage.getItem("token")) {
+              localStorage.setItem("token", token);
+            }
+          });
+      } else {
+        localStorage.removeItem("token");
+      }
+    }, 30 * 1000);
   }
 
   @observable loading = false;

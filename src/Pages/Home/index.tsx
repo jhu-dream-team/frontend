@@ -11,12 +11,8 @@ import { inject, observer } from "mobx-react";
 const style = require("./styles.scss");
 
 @observer
-@inject("authStore", "userStore")
+@inject("gameStore")
 class Home extends React.Component<any, any> {
-  private socket;
-  private game_service;
-  private question_service;
-
   constructor(props) {
     super(props);
     this.state = {
@@ -28,7 +24,9 @@ class Home extends React.Component<any, any> {
     };
   }
 
-  async componentDidMount() {}
+  async componentDidMount() {
+    this.props.gameStore.getGames();
+  }
 
   onChangeCheckbox(id) {
     var index = this.state.selected_question_sets.indexOf(id);
@@ -45,18 +43,7 @@ class Home extends React.Component<any, any> {
     this.setState({ ...this.state, game_name: event.target.value });
   }
 
-  async onCreateClick() {
-    var result = await this.game_service
-      .create_game(this.state.game_name, this.state.selected_question_sets)
-      .catch(err => console.log(err));
-    var games = this.state.games;
-    games.push(result);
-    this.setState({
-      ...this.state,
-      games: games,
-      modalOpen: false
-    });
-  }
+  async onCreateClick() {}
 
   handleModalOpen() {
     this.setState({
@@ -76,30 +63,15 @@ class Home extends React.Component<any, any> {
     this.props.history.replace("/game/" + id);
   }
 
-  async handleGameStart(id) {
-    var result = await this.game_service
-      .start_game(id)
-      .catch(err => console.log(err));
-    var games = this.state.games;
-    for (var game in games) {
-      if (games[game].id == id) {
-        games[game].state = "STARTED";
-      }
-    }
-    this.setState(
-      {
-        ...this.state,
-        games: games
-      },
-      () => console.log(this.state)
-    );
-    this.forceUpdate();
-  }
+  async handleGameStart(id) {}
 
   render() {
     return (
       <div>
-        <h1 className={style["title"]}> Welcome to Wheel of Jeopardy </h1>
+        <h1 className={style["title"]}>
+          {" "}
+          Welcome to Wheel of Jeopardy Test Test Test{" "}
+        </h1>
         <Modal
           open={this.state.modalOpen}
           onClose={() => this.handleModalClose}
@@ -158,32 +130,14 @@ class Home extends React.Component<any, any> {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {this.state.games.length > 0
-              ? this.state.games.map(x => {
-                  return (
-                    <Table.Row key={x.id}>
-                      <Table.Cell>{x.name}</Table.Cell>
-                      <Table.Cell>{x.state}</Table.Cell>
-                      <Table.Cell>
-                        {!x.players.includes(this.props.userStore.user_id) ? (
-                          <Button>Join</Button>
-                        ) : x.state == "STARTED" ? (
-                          <Button onClick={() => this.goToGame(x.id)}>
-                            Enter
-                          </Button>
-                        ) : x.owner == this.props.userStore.user_id ? (
-                          <Button
-                            primary
-                            onClick={() => this.handleGameStart(x.id)}
-                          >
-                            Start
-                          </Button>
-                        ) : null}
-                      </Table.Cell>
-                    </Table.Row>
-                  );
-                })
-              : null}
+            {this.props.gameStore.games.map(x => {
+              return (
+                <Table.Row key={x.id}>
+                  <Table.Cell>{x.name}</Table.Cell>
+                  <Table.Cell>{x.state}</Table.Cell>
+                </Table.Row>
+              );
+            })}
           </Table.Body>
         </Table>
       </div>
