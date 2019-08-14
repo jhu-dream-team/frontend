@@ -35,6 +35,23 @@ export default class ApolloClient {
         throw err;
       });
   }
+  queryScore() {
+    let queryBody = `
+    query {
+      Scores(limit: 9999) {
+        data{
+        value
+        game{
+          id
+          round
+          name
+        }
+        }
+    }
+    }
+    `;
+    return this.query(queryBody);
+  }
 
   queryGames() {
     let queryBody = `
