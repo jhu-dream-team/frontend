@@ -5,7 +5,7 @@ export default class ApolloClient {
   constructor(props) {
     ApolloClient.instance = this;
     const uri =
-      " https://us-central1-wheelofjeopardy.cloudfunctions.net/api/graphql";
+      "https://us-central1-wheelofjeopardy.cloudfunctions.net/api/graphql";
     this.client = createApolloFetch({ uri });
     this.client.use(async ({ request, options }, next) => {
       if (!options.headers) {
@@ -35,19 +35,25 @@ export default class ApolloClient {
         throw err;
       });
   }
-  queryScore() {
+  queryGame(id) {
     let queryBody = `
     query {
-      Scores(limit: 9999) {
-        data{
-        value
-        game{
-          id
-          round
-          name
+      Game(id: ${id}) {
+        id
+        round
+        scores {
+          data {
+            id
+            type
+            round
+            value
+            owner {
+              firstName
+              lastName
+            }
+          }
         }
-        }
-    }
+      }
     }
     `;
     return this.query(queryBody);
@@ -56,10 +62,12 @@ export default class ApolloClient {
   queryGames() {
     let queryBody = `
     query {
-      Game(id: "KAgZF7kr9O6eG9O28Vl4"){
-        id
-        name
-        state
+      Games(limit: 9999){
+        data {
+         id
+          name
+         state
+        }
       }
     }
     `;

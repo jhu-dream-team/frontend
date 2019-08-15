@@ -11,90 +11,78 @@ import { inject, observer } from "mobx-react";
 
 @inject("gameStore")
 @observer
-class ScoreBoard extends React.Component<any, any> {
+class ScoreBoard extends React.PureComponent<any, any> {
   constructor(props) {
     super(props);
-    this.state = {
-        game: null,
-        round: null,
-        players: [],
-        scores: []
-    };
   }
 
   async componentDidMount() {
-    this.props.gameStore.getScores();
+    this.props.gameStore.getGame(this.props.gameId);
   }
-  //can bw called to update the state
-  boardSetState = () => {
-    this.setState({
-        game:null,
-        round:null,
-        player:[],
-        scores:[]
-    })
-  
-}
 
   renderTableBanner = () => {
-    return (
-        <h2>game: {this.state.game}</h2>
-    )
-
-  }
+    return <h2>game: {this.state.game}</h2>;
+  };
 
   renderTableColumns = () => {
-   return(
-        <tr>
-            <th>Player</th>
-            <th>round</th>
-            <th>Score</th>
-        </tr>
-   )
- }
-
- rendertableRows = () => {
-    return(
-        <tr>
-            <td>
-                {
-                    this.state.players.map(
-                            function(name, index){
-                                return <li key={ index }>{name}</li>;
-                            }
-                    )
-                }
-            </td>
-            <td>
-                {
-                    <li>{this.state.round}</li>
-                }
-            </td>
-            <td>
-                {
-                    this.state.scores.map(
-                            function(name, index){
-                                return <li key={ index }>{name}</li>;
-                            }
-                    )
-                }
-            </td>
+    return (
+      <tr>
+        <th>Player</th>
+        <th>round</th>
+        <th>Score</th>
       </tr>
+    );
+  };
 
-     )
-
- }
-
+  rendertableRows = () => {
+    return (
+      <tr>
+        <td>
+          {this.state.players.map(function(name, index) {
+            return <li key={index}>{name}</li>;
+          })}
+        </td>
+        <td>{<li>{this.state.round}</li>}</td>
+        <td>
+          {this.state.scores.map(function(name, index) {
+            return <li key={index}>{name}</li>;
+          })}
+        </td>
+      </tr>
+    );
+  };
 
   render() {
     return (
-        <div>
-            <h1 id=''>{this.state.renderTableBanner()}</h1>
-            <table id=''>
-                {this.state.renderTableColumns()}
-                {this.state.rendertableRows()}
-            </table>
-        </div>
+      <Table celled>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>Player Name</Table.HeaderCell>
+            <Table.HeaderCell>Score</Table.HeaderCell>l>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {!this.props.gameStore.loading ? (
+            this.props.gameStore.game.scores
+              .filter(x => x.round == this.state.game.round)
+              .map(x => {
+                return (
+                  <Table.Row key={x.id}>
+                    <Table.Cell>
+                      {x.owner.firstName + x.owner.lastName}
+                    </Table.Cell>
+                    <Table.Cell>{x.value}</Table.Cell>
+                  </Table.Row>
+                );
+              })
+          ) : (
+            <Table.Row>
+              <Table.Cell>Loading...</Table.Cell>
+              <Table.Cell>Loading...</Table.Cell>
+            </Table.Row>
+          )}
+        </Table.Body>
+      </Table>
     );
   }
 }
