@@ -17,7 +17,7 @@ class GameUI extends React.Component<any, any> {
     return (
       <div>
         <h1> Game UI </h1>
-        <ScoreBoard gameId={this.props.param.id} />
+        <ScoreBoard gameId={this.props.params.id} />
       </div>
     );
   }
