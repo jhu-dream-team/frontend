@@ -6,7 +6,7 @@ import { runInThisContext } from "vm";
 const style = require("./styles.scss");
 
 @observer
-@inject("authStore")
+@inject("rootStore")
 export default class SignUp extends React.Component<any, any> {
   private validation;
 
@@ -63,7 +63,7 @@ export default class SignUp extends React.Component<any, any> {
     ].some(res => res);
 
     if (!anyErrors) {
-      this.props.authStore.signup({
+      this.props.rootStore.authStore.signup({
         email: this.state.email,
         password: this.state.password,
         firstName: this.state.firstName,
@@ -162,7 +162,7 @@ export default class SignUp extends React.Component<any, any> {
             <Button
               circular
               fluid
-              loading={this.props.authStore.loading}
+              loading={this.props.rootStore.authStore.loading}
               disabled={
                 this.state.email_errorMessage.length > 0 ||
                 this.state.password_errorMessage.length > 0 ||
@@ -182,9 +182,9 @@ export default class SignUp extends React.Component<any, any> {
             >
               Sign-Up
             </Button>
-            {this.props.authStore.errors.length > 0 && (
+            {this.props.rootStore.authStore.errors.length > 0 && (
               <p className={style["login_error"]}>
-                {this.props.authStore.errors[0]}
+                {this.props.rootStore.authStore.errors[0]}
               </p>
             )}
           </Form>

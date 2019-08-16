@@ -1,8 +1,8 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
 
+@inject("rootStore")
 @observer
-@inject("authStore")
 class GameUI extends React.Component<any, any> {
   private game_service;
   private question_service;

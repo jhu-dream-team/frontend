@@ -4,7 +4,7 @@ import { Container, Button, Form, Icon } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
 const style = require("./styles.scss");
 
-@inject("authStore")
+@inject("rootStore")
 @observer
 class Login extends React.Component<any, any> {
   private validation;
@@ -47,7 +47,7 @@ class Login extends React.Component<any, any> {
     ].some(res => res);
 
     if (!anyErrors) {
-      this.props.authStore.login({
+      this.props.rootStore.authStore.login({
         email: this.state.email,
         password: this.state.password,
         history: this.props.history
@@ -86,7 +86,7 @@ class Login extends React.Component<any, any> {
               iconPosition="left"
               placeholder="Password"
               type="password"
-              loading={this.props.authStore.loading}
+              loading={this.props.rootStore.authStore.loading}
               error={!!this.state.password_errorMessage}
             >
               <Icon name="lock" />
@@ -121,9 +121,9 @@ class Login extends React.Component<any, any> {
             >
               Login
             </Button>
-            {this.props.authStore.errors.length > 0 && (
+            {this.props.rootStore.authStore.errors.length > 0 && (
               <p className={style["login_error"]}>
-                {this.props.authStore.errors[0]}
+                {this.props.rootStore.authStore.errors[0]}
               </p>
             )}
           </Form>

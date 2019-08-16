@@ -4,7 +4,7 @@ import ApolloClient from "../../Services/apollo";
 
 const apolloClient = ApolloClient.getInstance();
 
-export default class GameStore {
+export default class UserStore {
   private rootStore;
 
   constructor(rootStore) {
@@ -14,17 +14,23 @@ export default class GameStore {
   @observable loading = false;
   @observable errors: Array<String> = [];
 
-  @observable games = [];
+  @persist("object") @observable profile = {
+    id: null,
+    firstName: null,
+    lastName: null,
+    profileImg: null,
+    email: null
+  };
 
   @action
-  async getGames() {
+  async getProfile() {
     this.errors = [];
     this.loading = true;
-    const data = await apolloClient.queryGames().catch(err => {
+    const data = await apolloClient.queryProfile().catch(err => {
       this.loading = false;
       this.errors.push(err);
     });
-    this.games = [data.data.Game];
+    this.profile = data.data.Profile;
     this.loading = false;
   }
 }

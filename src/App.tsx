@@ -9,17 +9,31 @@ import Header from "./components/header";
 import Page404 from "./Pages/404";
 import SignUp from "./Authentication/Signup";
 
-@inject("authStore")
+@inject("rootStore")
 @observer
 class App extends React.Component<any, any> {
   constructor(props) {
     super(props);
   }
 
+  componentDidMount() {
+    console.log(this.props);
+    if (this.props.rootStore.authStore.isAuthenticated) {
+      console.log(this.props.rootStore.userStore);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    console.log(this.props);
+    if (this.props.rootStore.authStore.isAuthenticated) {
+      console.log(this.props.rootStore.userStore);
+    }
+  }
+
   render() {
     return (
       <div>
-        {this.props.authStore.isAuthenticated ? <Header /> : null}
+        {this.props.rootStore.authStore.isAuthenticated ? <Header /> : null}
         <Switch>
           <PrivateRoute exact path="/" component={Home} />
           <PrivateRoute exact={false} path="/game/:id" component={GameUI} />

@@ -10,7 +10,7 @@ import {
 import { inject, observer } from "mobx-react";
 const style = require("./styles.scss");
 
-@inject("gameStore")
+@inject("rootStore")
 @observer
 class Home extends React.Component<any, any> {
   constructor(props) {
@@ -25,7 +25,7 @@ class Home extends React.Component<any, any> {
   }
 
   async componentDidMount() {
-    this.props.gameStore.getGames();
+    this.props.rootStore.gameStore.getGames();
   }
 
   onChangeCheckbox(id) {
@@ -130,7 +130,7 @@ class Home extends React.Component<any, any> {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {this.props.gameStore.games.map(x => {
+            {this.props.rootStore.gameStore.games.map(x => {
               return (
                 <Table.Row key={x.id}>
                   <Table.Cell>{x.name}</Table.Cell>

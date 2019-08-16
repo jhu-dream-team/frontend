@@ -1,7 +1,6 @@
 import { computed, observable, action } from "mobx";
 import { persist } from "mobx-persist";
 import * as firebase from "firebase";
-import makeInspectable from "mobx-devtools-mst";
 
 const config = {
   apiKey: "AIzaSyBZ5YRgH_hElSIizAfDBQtJxC9qzf3VPRM",
@@ -15,10 +14,12 @@ const config = {
 
 firebase.initializeApp(config);
 
-class AuthStore {
+export default class AuthStore {
   private unsubscribe;
+  private rootStore;
 
-  constructor() {
+  constructor(rootStore) {
+    this.rootStore = rootStore;
     this.unsubscribe = firebase.auth().onAuthStateChanged(user => {
       if (user) {
         user
@@ -91,7 +92,7 @@ class AuthStore {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(userCredential => {
+      .then(async userCredential => {
         this.profile.id = userCredential.user.uid;
         this.loading = false;
         window.location.replace("/");
@@ -110,7 +111,7 @@ class AuthStore {
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then(userCredential => {
+      .then(async userCredential => {
         this.profile.id = userCredential.user.uid;
         this.loading = false;
         window.location.replace("/");
@@ -122,6 +123,3 @@ class AuthStore {
       });
   }
 }
-
-const userStore = new AuthStore();
-export default makeInspectable(userStore);

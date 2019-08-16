@@ -4,7 +4,8 @@ import * as firebase from "firebase";
 export default class ApolloClient {
   constructor(props) {
     ApolloClient.instance = this;
-    const uri = "http://localhost:3000/graphql";
+    const uri =
+      " https://us-central1-wheelofjeopardy.cloudfunctions.net/api/graphql";
     this.client = createApolloFetch({ uri });
     this.client.use(async ({ request, options }, next) => {
       if (!options.headers) {
@@ -42,6 +43,34 @@ export default class ApolloClient {
         id
         name
         state
+      }
+    }
+    `;
+    return this.query(queryBody);
+  }
+
+  queryProfile() {
+    let queryBody = `
+    {
+      Profile {
+          id
+          firstName
+          lastName
+          email
+          profileImg
+      }
+    }
+    `;
+    return this.query(queryBody);
+  }
+
+  setDeviceToken(deviceToken) {
+    let queryBody = `
+    mutation {
+      updateDeviceToken(deviceToken: "${deviceToken}"){
+          status
+          message
+          code
       }
     }
     `;
