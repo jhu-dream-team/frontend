@@ -17,16 +17,14 @@ class App extends React.Component<any, any> {
   }
 
   componentDidMount() {
-    console.log(this.props);
     if (this.props.rootStore.authStore.isAuthenticated) {
-      console.log(this.props.rootStore.userStore);
+      this.props.rootStore.userStore.getProfile();
     }
   }
 
   componentDidUpdate(prevProps) {
-    console.log(this.props);
     if (this.props.rootStore.authStore.isAuthenticated) {
-      console.log(this.props.rootStore.userStore);
+      this.props.rootStore.userStore.getProfile();
     }
   }
 

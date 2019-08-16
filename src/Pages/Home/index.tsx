@@ -5,7 +5,10 @@ import {
   Modal,
   Form,
   Checkbox,
-  Container
+  Container,
+  Segment,
+  Loader,
+  Dimmer
 } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
 const style = require("./styles.scss");
@@ -68,10 +71,7 @@ class Home extends React.Component<any, any> {
   render() {
     return (
       <div>
-        <h1 className={style["title"]}>
-          {" "}
-          Welcome to Wheel of Jeopardy Test Test Test{" "}
-        </h1>
+        <h1 className={style["title"]}> Welcome to Wheel of Jeopardy </h1>
         <Modal
           open={this.state.modalOpen}
           onClose={() => this.handleModalClose}
@@ -121,25 +121,47 @@ class Home extends React.Component<any, any> {
             </Container>
           </Modal.Content>
         </Modal>
-        <Table celled>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>Name</Table.HeaderCell>
-              <Table.HeaderCell>Status</Table.HeaderCell>
-              <Table.HeaderCell>Actions</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {this.props.rootStore.gameStore.games.map(x => {
-              return (
-                <Table.Row key={x.id}>
-                  <Table.Cell>{x.name}</Table.Cell>
-                  <Table.Cell>{x.state}</Table.Cell>
-                </Table.Row>
-              );
-            })}
-          </Table.Body>
-        </Table>
+        <Segment>
+          <Dimmer active={this.props.rootStore.gameStore.loading}>
+            <Loader>Loading</Loader>
+          </Dimmer>
+          <Table celled>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>Name</Table.HeaderCell>
+                <Table.HeaderCell># Players</Table.HeaderCell>
+                <Table.HeaderCell>Status</Table.HeaderCell>
+                <Table.HeaderCell>Actions</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {this.props.rootStore.gameStore.games.map(x => {
+                console.log(x.players.data.map(y => y.id));
+                return (
+                  <Table.Row key={x.id}>
+                    <Table.Cell>{x.name}</Table.Cell>
+                    <Table.Cell>{x.players.count}</Table.Cell>
+                    <Table.Cell>{x.state}</Table.Cell>
+                    <Table.Cell>
+                      {x.players.data
+                        .map(y => y.id)
+                        .includes(this.props.rootStore.userStore.profile.id) ? (
+                        <div>
+                          <Button primary>Enter</Button>
+                          <Button secondary>Leave</Button>
+                        </div>
+                      ) : x.state == "Created" ? (
+                        <div>
+                          <Button priamry>Join</Button>
+                        </div>
+                      ) : null}
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })}
+            </Table.Body>
+          </Table>
+        </Segment>
       </div>
     );
   }

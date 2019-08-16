@@ -42,7 +42,7 @@ export default class ApolloClient {
       Game(id: ${id}) {
         id
         round
-        scores {
+        scores(limit: 9999) {
           data {
             id
             type
@@ -66,8 +66,14 @@ export default class ApolloClient {
       Games(limit: 9999){
         data {
          id
-          name
+         name
          state
+         players(limit: 9999) {
+          count
+          data {
+            id
+          }
+         }
         }
       }
     }
