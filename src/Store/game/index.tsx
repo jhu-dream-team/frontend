@@ -25,7 +25,19 @@ export default class GameStore {
       this.loading = false;
       this.errors.push(err);
     });
-    this.games = [data.data.Game];
+    this.games = data.data.Games.data;
+    this.loading = false;
+  }
+
+  @action
+  async getGame(id) {
+    this.errors = [];
+    this.loading = true;
+    const data = await apolloClient.queryGame(id).catch(err => {
+      this.loading = false;
+      this.errors.push(err);
+    });
+    this.games = data.data.Game.data;
     this.loading = false;
   }
 

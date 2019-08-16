@@ -35,6 +35,7 @@ export default class ApolloClient {
         throw err;
       });
   }
+
   queryGame(id) {
     let queryBody = `
     query {
