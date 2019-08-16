@@ -136,7 +136,6 @@ class Home extends React.Component<any, any> {
             </Table.Header>
             <Table.Body>
               {this.props.rootStore.gameStore.games.map(x => {
-                console.log(x.players.data.map(y => y.id));
                 return (
                   <Table.Row key={x.id}>
                     <Table.Cell>{x.name}</Table.Cell>

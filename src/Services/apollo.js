@@ -39,7 +39,7 @@ export default class ApolloClient {
   queryGame(id) {
     let queryBody = `
     query {
-      Game(id: ${id}) {
+      Game(id: "${id}") {
         id
         round
         scores(limit: 9999) {

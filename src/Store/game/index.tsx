@@ -15,7 +15,7 @@ export default class GameStore {
   @observable errors: Array<String> = [];
 
   @persist @observable games = [];
-  @persist @observable scores = [];
+  @observable game = null;
 
   @action
   async getGames() {
@@ -37,19 +37,8 @@ export default class GameStore {
       this.loading = false;
       this.errors.push(err);
     });
-    this.games = data.data.Game.data;
-    this.loading = false;
-  }
-
-  @action
-  async getScores() {
-    this.errors = [];
-    this.loading = true;
-    const data = await apolloClient.queryScores().catch(err => {
-      this.loading = false;
-      this.errors.push(err);
-    });
-    this.scores = [data.data.Game];
+    console.log(data.data.Game);
+    this.game = data.data.Game;
     this.loading = false;
   }
 }

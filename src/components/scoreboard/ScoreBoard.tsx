@@ -5,11 +5,14 @@ import {
   Modal,
   Form,
   Checkbox,
-  Container
+  Container,
+  Segment,
+  Dimmer,
+  Loader
 } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
 
-@inject("gameStore")
+@inject("rootStore")
 @observer
 class ScoreBoard extends React.PureComponent<any, any> {
   constructor(props) {
@@ -17,7 +20,7 @@ class ScoreBoard extends React.PureComponent<any, any> {
   }
 
   async componentDidMount() {
-    this.props.gameStore.getGame(this.props.gameId);
+    this.props.rootStore.gameStore.getGame(this.props.gameId);
   }
 
   renderTableBanner = () => {
@@ -53,36 +56,45 @@ class ScoreBoard extends React.PureComponent<any, any> {
   };
 
   render() {
+    console.log(this.props.rootStore.gameStore.game);
     return (
-      <Table celled>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>Player Name</Table.HeaderCell>
-            <Table.HeaderCell>Score</Table.HeaderCell>l>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {!this.props.gameStore.loading ? (
-            this.props.gameStore.game.scores
-              .filter(x => x.round == this.state.game.round)
-              .map(x => {
-                return (
-                  <Table.Row key={x.id}>
-                    <Table.Cell>
-                      {x.owner.firstName + x.owner.lastName}
-                    </Table.Cell>
-                    <Table.Cell>{x.value}</Table.Cell>
-                  </Table.Row>
-                );
-              })
-          ) : (
+      <Segment>
+        <Dimmer active={this.props.rootStore.gameStore.loading}>
+          <Loader>Loading</Loader>
+        </Dimmer>
+        <Table celled>
+          <Table.Header>
             <Table.Row>
-              <Table.Cell>Loading...</Table.Cell>
-              <Table.Cell>Loading...</Table.Cell>
+              <Table.HeaderCell>Player Name</Table.HeaderCell>
+              <Table.HeaderCell>Score</Table.HeaderCell>
             </Table.Row>
-          )}
-        </Table.Body>
-      </Table>
+          </Table.Header>
+          <Table.Body>
+            {!this.props.rootStore.gameStore.loading &&
+            this.props.rootStore.gameStore.game != null ? (
+              this.props.rootStore.gameStore.game.scores.data
+                .filter(
+                  x => x.round == this.props.rootStore.gameStore.game.round
+                )
+                .map(x => {
+                  return (
+                    <Table.Row key={x.id}>
+                      <Table.Cell>
+                        {x.owner.firstName + x.owner.lastName}
+                      </Table.Cell>
+                      <Table.Cell>{x.value}</Table.Cell>
+                    </Table.Row>
+                  );
+                })
+            ) : (
+              <Table.Row>
+                <Table.Cell>Loading...</Table.Cell>
+                <Table.Cell>Loading...</Table.Cell>
+              </Table.Row>
+            )}
+          </Table.Body>
+        </Table>
+      </Segment>
     );
   }
 }
