@@ -74,6 +74,9 @@ export default class ApolloClient {
             id
           }
          }
+         owner {
+           id
+         }
         }
       }
     }
@@ -103,6 +106,32 @@ export default class ApolloClient {
           status
           message
           code
+      }
+    }
+    `;
+    return this.query(queryBody);
+  }
+
+  joinGame(id) {
+    let queryBody = `
+    mutation {
+      joinGame(id: "${id}"){
+        status
+        message
+        code
+      }
+    }
+    `;
+    return this.query(queryBody);
+  }
+
+  leaveGame(id) {
+    let queryBody = `
+    mutation {
+      leaveGame(id: "${id}"){
+        status
+        message
+        code
       }
     }
     `;

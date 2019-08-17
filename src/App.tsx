@@ -3,7 +3,7 @@ import { Switch, Route } from "react-router-dom";
 import PrivateRoute from "./Pages/PrivateRoute";
 import Home from "./Pages/Home";
 import Login from "./Authentication/Login";
-import GameUI from "./components/game_ui";
+import GameUI from "./Game/screens/GameUIScreen";
 import { inject, observer } from "mobx-react";
 import Header from "./components/header";
 import Page404 from "./Pages/404";

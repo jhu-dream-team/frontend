@@ -11,6 +11,7 @@ import {
   Loader
 } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
+const styles = require("./styles.scss");
 
 @inject("rootStore")
 @observer
@@ -19,47 +20,10 @@ class ScoreBoard extends React.PureComponent<any, any> {
     super(props);
   }
 
-  async componentDidMount() {
-    this.props.rootStore.gameStore.getGame(this.props.gameId);
-  }
-
-  renderTableBanner = () => {
-    return <h2>game: {this.state.game}</h2>;
-  };
-
-  renderTableColumns = () => {
-    return (
-      <tr>
-        <th>Player</th>
-        <th>round</th>
-        <th>Score</th>
-      </tr>
-    );
-  };
-
-  rendertableRows = () => {
-    return (
-      <tr>
-        <td>
-          {this.state.players.map(function(name, index) {
-            return <li key={index}>{name}</li>;
-          })}
-        </td>
-        <td>{<li>{this.state.round}</li>}</td>
-        <td>
-          {this.state.scores.map(function(name, index) {
-            return <li key={index}>{name}</li>;
-          })}
-        </td>
-      </tr>
-    );
-  };
-
   render() {
-    console.log(this.props.rootStore.gameStore.game);
     return (
-      <Segment>
-        <Dimmer active={this.props.rootStore.gameStore.loading}>
+      <Segment className={styles["scoreboard"]}>
+        <Dimmer active={this.props.rootStore.gameStore.loading.game}>
           <Loader>Loading</Loader>
         </Dimmer>
         <Table celled>
@@ -70,7 +34,7 @@ class ScoreBoard extends React.PureComponent<any, any> {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {!this.props.rootStore.gameStore.loading &&
+            {!this.props.rootStore.gameStore.loading.game &&
             this.props.rootStore.gameStore.game != null ? (
               this.props.rootStore.gameStore.game.scores.data
                 .filter(
@@ -80,7 +44,7 @@ class ScoreBoard extends React.PureComponent<any, any> {
                   return (
                     <Table.Row key={x.id}>
                       <Table.Cell>
-                        {x.owner.firstName + x.owner.lastName}
+                        {x.owner.firstName + " " + x.owner.lastName}
                       </Table.Cell>
                       <Table.Cell>{x.value}</Table.Cell>
                     </Table.Row>

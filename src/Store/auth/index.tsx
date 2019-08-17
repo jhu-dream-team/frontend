@@ -95,7 +95,7 @@ export default class AuthStore {
       .then(async userCredential => {
         this.profile.id = userCredential.user.uid;
         this.loading = false;
-        window.location.replace("/");
+        this.rootStore.routingStore.push("/");
       })
       .catch(err => {
         console.log("Authentication Error: ", err);

@@ -11,6 +11,7 @@ module.exports = {
     extensions: [".ts", ".tsx", ".js"]
   },
   output: {
+    publicPath: "/",
     path: path.join(__dirname, "/dist"),
     filename: "bundle.min.js"
   },
@@ -54,6 +55,9 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, "dist"),
     compress: true,
-    port: 9000
+    port: 9000,
+    historyApiFallback: {
+      index: "/"
+    }
   }
 };

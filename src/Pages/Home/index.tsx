@@ -62,12 +62,6 @@ class Home extends React.Component<any, any> {
     });
   }
 
-  goToGame(id) {
-    this.props.history.replace("/game/" + id);
-  }
-
-  async handleGameStart(id) {}
-
   render() {
     return (
       <div>
@@ -122,7 +116,7 @@ class Home extends React.Component<any, any> {
           </Modal.Content>
         </Modal>
         <Segment>
-          <Dimmer active={this.props.rootStore.gameStore.loading}>
+          <Dimmer active={this.props.rootStore.gameStore.loading.list}>
             <Loader>Loading</Loader>
           </Dimmer>
           <Table celled>
@@ -146,14 +140,65 @@ class Home extends React.Component<any, any> {
                         .map(y => y.id)
                         .includes(this.props.rootStore.userStore.profile.id) ? (
                         <div>
-                          <Button primary>Enter</Button>
-                          <Button secondary>Leave</Button>
+                          <Button
+                            onClick={() =>
+                              this.props.rootStore.gameStore.enterGame(x.id)
+                            }
+                            primary
+                            loading={
+                              this.props.rootStore.gameStore.loading.entry.id ==
+                                x.id &&
+                              this.props.rootStore.gameStore.loading.entry
+                                .value &&
+                              this.props.rootStore.gameStore.loading.entry
+                                .button == "enter"
+                            }
+                          >
+                            Enter
+                          </Button>
+                          {x.state == "Created" &&
+                          x.owner.id !=
+                            this.props.rootStore.userStore.profile.id ? (
+                            <Button
+                              secondary
+                              loading={
+                                this.props.rootStore.gameStore.loading.entry
+                                  .id == x.id &&
+                                this.props.rootStore.gameStore.loading.entry
+                                  .value &&
+                                this.props.rootStore.gameStore.loading.entry
+                                  .button == "leave"
+                              }
+                              disabled={
+                                this.props.rootStore.gameStore.loading.entry
+                                  .id == x.id &&
+                                this.props.rootStore.gameStore.loading.entry
+                                  .value &&
+                                this.props.rootStore.gameStore.loading.entry
+                                  .button != "leave"
+                              }
+                            >
+                              Leave
+                            </Button>
+                          ) : null}
                         </div>
-                      ) : x.state == "Created" ? (
+                      ) : (
                         <div>
-                          <Button priamry>Join</Button>
+                          <Button
+                            primary
+                            onClick={() =>
+                              this.props.rootStore.gameStore.joinGame(x.id)
+                            }
+                            disabled={
+                              x.state != "Created" ||
+                              this.props.rootStore.gameStore.loading.entry.id !=
+                                x.id
+                            }
+                          >
+                            Join
+                          </Button>{" "}
                         </div>
-                      ) : null}
+                      )}
                     </Table.Cell>
                   </Table.Row>
                 );

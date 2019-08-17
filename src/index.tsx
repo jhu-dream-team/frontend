@@ -1,11 +1,14 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { HashRouter as Router } from "react-router-dom";
+import { Router } from "react-router-dom";
+import { syncHistoryWithStore } from "mobx-react-router";
 import { Provider } from "mobx-react";
 import { create } from "mobx-persist";
 import NotificationManager from "./Services/messaging.js";
-import rootStore from "./Store";
+import { rootStore, history } from "./Store";
 require("./Assets/styles/index.scss");
+
+const reactiveHistory = syncHistoryWithStore(history, rootStore.routingStore);
 
 const hydrate = create();
 
@@ -27,7 +30,7 @@ if ("serviceWorker" in navigator) {
 hydrate("auth", rootStore.authStore).then(() => {
   ReactDOM.render(
     <Provider rootStore={rootStore}>
-      <Router>
+      <Router history={reactiveHistory}>
         <App />
       </Router>
     </Provider>,
