@@ -4,23 +4,17 @@ import { inject, observer } from "mobx-react";
 
 @inject("rootStore")
 @observer
-export default class Header extends React.Component<any, any> {
-  state = { activeItem: "home" };
-
-  handleItemClick = name => {
-    window.location.replace("/");
-    this.setState({ activeItem: name });
-  };
-
+export default class Header extends React.PureComponent<any, any> {
   render() {
-    const { activeItem } = this.state;
-
+    console.log(this.props.rootStore.routingStore);
     return (
       <Menu>
         <Menu.Item
           name="home"
-          active={activeItem === "home"}
-          onClick={() => this.handleItemClick("home")}
+          active={this.props.rootStore.routingStore.location.pathname.includes(
+            "home"
+          )}
+          onClick={() => this.props.rootStore.routingStore.replace("/")}
         >
           Home
         </Menu.Item>

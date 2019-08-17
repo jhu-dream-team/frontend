@@ -1,6 +1,9 @@
 import * as React from "react";
 import * as d3 from "d3";
+import { inject, observer } from "mobx-react";
 
+@inject("rootStore")
+@observer
 export default class Wheel extends React.Component<any, any> {
   private node;
   private width;
@@ -16,8 +19,8 @@ export default class Wheel extends React.Component<any, any> {
   private imgSize;
   constructor(props) {
     super(props);
-    this.width = 500;
-    this.height = 500;
+    this.width = window.innerWidth / 1.5;
+    this.height = window.innerWidth / 1.5;
     this.radius = Math.min(this.width, this.height) / 2;
     this.color = "#444444";
     this.innerRadius = 75;
@@ -70,11 +73,7 @@ export default class Wheel extends React.Component<any, any> {
   }
 
   componentDidMount() {
-    this.createWheel(this.state.prizes);
-    this.rotateToId("purple");
-    setTimeout(() => {
-      this.rotateToId("red");
-    }, 5000);
+    this.createWheel(this.props.rootStore.gameStore.wheelCategories);
   }
 
   rotateToId(id) {
@@ -162,14 +161,24 @@ export default class Wheel extends React.Component<any, any> {
       arcsEnter
         .append("text")
         .attr("font-size", "1.5em")
-        .attr("fill", "#fff")
+        .attr("fill", "#000")
         .attr("transform", function(d) {
           var pos = arcLight.centroid(d);
-          return "translate(" + pos + ")";
+          var midAngle =
+            d.endAngle < Math.PI
+              ? d.startAngle / 2 + d.endAngle / 2
+              : d.startAngle / 2 + d.endAngle / 2 + Math.PI;
+          return (
+            "translate(" +
+            pos +
+            ") rotate(-90) rotate(" +
+            (midAngle * 180) / Math.PI +
+            ")"
+          );
         })
         .attr("text-anchor", "middle")
         .text(function(d) {
-          return d.data.label;
+          return d.data.name;
         });
 
       var timeout = null;
@@ -183,7 +192,7 @@ export default class Wheel extends React.Component<any, any> {
         .append("path")
         .attr("d", arcFull)
         .attr("id", function(d) {
-          return d.data.info;
+          return d.data.id;
         })
         .style("stroke", "#fff")
         .style("stroke-width", "3px")
@@ -261,6 +270,13 @@ export default class Wheel extends React.Component<any, any> {
       .attr("cy", 0)
       .attr("r", this.innerRadius - 30)
       .style("fill", this.color);
+
+    if (
+      this.props.rootStore.gameStore.game.current_spin != null &&
+      this.props.rootStore.gameStore.game.current_spin != ""
+    ) {
+      this.rotateToId(this.props.rootStore.gameStore.game.current_spin);
+    }
   }
 
   rotateWheel(
@@ -300,7 +316,12 @@ export default class Wheel extends React.Component<any, any> {
 
     toTransform.attr("transform", d => {
       var pos1 = arcLight.centroid(d);
-      return `translate(${pos1}) rotate(${angle})`;
+      var midAngle =
+        d.endAngle < Math.PI
+          ? d.startAngle / 2 + d.endAngle / 2
+          : d.startAngle / 2 + d.endAngle / 2 + Math.PI;
+      return `translate(${pos1}) rotate(-90) rotate(${(midAngle * 180) /
+        Math.PI})`;
     });
   }
 
@@ -336,12 +357,14 @@ export default class Wheel extends React.Component<any, any> {
 
   render() {
     return (
-      <svg
-        className={"d3-wheel"}
-        ref={node => (this.node = node)}
-        width={this.width}
-        height={this.height}
-      />
+      <div style={{ marginRight: "25%", marginLeft: "auto" }}>
+        <svg
+          className={"d3-wheel"}
+          ref={node => (this.node = node)}
+          width={this.width}
+          height={this.height}
+        />
+      </div>
     );
   }
 }

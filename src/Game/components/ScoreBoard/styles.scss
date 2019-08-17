@@ -1,4 +1,6 @@
 .scoreboard {
   width: 20% !important;
-  align-self: flex-end;
+  position: absolute !important;
+  right: 0;
+  height: auto;
 }

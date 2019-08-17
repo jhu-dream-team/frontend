@@ -64,7 +64,7 @@ class Home extends React.Component<any, any> {
 
   render() {
     return (
-      <div>
+      <div style={{ marginLeft: "5%", marginRight: "5%" }}>
         <h1 className={style["title"]}> Welcome to Wheel of Jeopardy </h1>
         <Modal
           open={this.state.modalOpen}

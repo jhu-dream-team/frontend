@@ -1,6 +1,7 @@
 import { computed, observable, action } from "mobx";
 import { persist } from "mobx-persist";
 import ApolloClient from "../../Services/apollo";
+import * as randomColor from "randomcolor";
 
 const apolloClient = ApolloClient.getInstance();
 
@@ -47,6 +48,55 @@ export default class GameStore {
     });
     this.game = data.data.Game;
     this.loading.game = false;
+  }
+
+  @computed
+  get wheelCategories() {
+    // return this.game.question_categories.data.slice(
+    //   6 * (this.game.round - 1),
+    //   6 * this.game.round
+    // );
+    var default_options = [
+      {
+        id: "opponent_choice",
+        color: randomColor("red"),
+        name: "Opponent's Choice"
+      },
+      {
+        id: "player_choice",
+        color: randomColor("green"),
+        name: "Player's Choice"
+      },
+      {
+        id: "double_score",
+        color: randomColor("blue"),
+        name: "Double Score"
+      },
+      {
+        id: "bankrupt",
+        color: randomColor("red"),
+        name: "Bankrupt"
+      },
+      {
+        id: "free_spin",
+        color: randomColor("blue"),
+        name: "Free Spin"
+      },
+      {
+        id: "lose_turn",
+        color: randomColor(),
+        name: "Lose Turn"
+      }
+    ];
+    if (this.game == null) {
+      return default_options;
+    }
+    var question_categories = [];
+    this.game.question_categories.data.forEach(x => {
+      x["color"] = randomColor();
+      question_categories.push(x);
+    });
+    return default_options.concat(question_categories);
   }
 
   @action

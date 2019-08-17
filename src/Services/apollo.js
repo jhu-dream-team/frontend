@@ -42,6 +42,13 @@ export default class ApolloClient {
       Game(id: "${id}") {
         id
         round
+        current_spin
+        question_categories(limit: 9999) {
+          data {
+            id
+            name
+          }
+        }
         scores(limit: 9999) {
           data {
             id

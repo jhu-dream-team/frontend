@@ -5,7 +5,7 @@ import Home from "./Pages/Home";
 import Login from "./Authentication/Login";
 import GameUI from "./Game/screens/GameUIScreen";
 import { inject, observer } from "mobx-react";
-import Header from "./components/header";
+import Header from "./Common/components/Header";
 import Page404 from "./Pages/404";
 import SignUp from "./Authentication/Signup";
 

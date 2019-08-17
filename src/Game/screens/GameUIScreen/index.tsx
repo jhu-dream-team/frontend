@@ -20,8 +20,8 @@ class GameUI extends React.Component<any, any> {
   render() {
     return (
       <div className={styles["game"]}>
+        {this.props.rootStore.gameStore.game != null ? <Wheel /> : null}
         <ScoreBoard gameId={this.props.match.params.id} />
-        <Wheel angle={30} />
       </div>
     );
   }
