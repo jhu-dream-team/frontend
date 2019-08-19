@@ -59,8 +59,32 @@ export default class QuestionCategoryStore {
       this.errors.push(err);
     });
     this.question_categories.push(data.data.createQuestionCategory);
-    console.log(this.question_categories);
     this.loading.list = false;
+  }
+
+  @action
+  async createQuestion(
+    question,
+    suggested_answer,
+    max_points,
+    question_category_id
+  ) {
+    this.errors = [];
+    this.loading.question_category = true;
+    const data = await apolloClient
+      .createQuestion(
+        question,
+        suggested_answer,
+        max_points,
+        question_category_id
+      )
+      .catch(err => {
+        console.log(err);
+        this.loading.question_category = false;
+        this.errors.push(err);
+      });
+    this.question_category.questions.data.push(data.data.createQuestion);
+    this.loading.question_category = false;
   }
 
   async enterQuestionCategory(id) {

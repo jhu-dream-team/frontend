@@ -205,6 +205,23 @@ export default class ApolloClient {
     return this.query(queryBody);
   }
 
+  createQuestion(question, suggested_answer, max_points, question_category_id) {
+    let queryBody = `
+    mutation {
+      createQuestion(question: "${question}", suggested_answer: "${suggested_answer}", max_points: ${max_points}, question_category_id: "${question_category_id}"){
+        id
+        question
+        suggested_answer
+        max_points
+        owner {
+          id
+        }
+      }
+    }
+    `;
+    return this.query(queryBody);
+  }
+
   createQuestionCategory(name) {
     let queryBody = `
     mutation {

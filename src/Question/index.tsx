@@ -21,12 +21,14 @@ class QuestionPage extends React.Component<any, any> {
     super(props);
     this.state = {
       modalOpen: false,
-      category_name: ""
+      question: "",
+      suggested_answer: "",
+      max_points: 0
     };
   }
 
-  onChangeName(event) {
-    this.setState({ ...this.state, category_name: event.target.value });
+  onChangeField(fieldname, event) {
+    this.setState({ ...this.state, [fieldname]: event.target.value });
   }
 
   componentDidMount() {
@@ -36,8 +38,11 @@ class QuestionPage extends React.Component<any, any> {
   }
 
   onCreateClick() {
-    this.props.rootStore.questionCategoryStore.createQuestionCategory(
-      this.state.category_name
+    this.props.rootStore.questionCategoryStore.createQuestion(
+      this.state.question,
+      this.state.suggested_answer,
+      this.state.max_points,
+      this.props.match.params.id
     );
     this.handleModalClose();
   }
@@ -70,9 +75,13 @@ class QuestionPage extends React.Component<any, any> {
           open={this.state.modalOpen}
           onClose={() => this.handleModalClose}
           trigger={
-            <Button primary onClick={() => this.handleModalOpen()}>
-              Create Question
-            </Button>
+            this.props.rootStore.userStore.profile.id ==
+            this.props.rootStore.questionCategoryStore.question_category.owner
+              .id ? (
+              <Button primary onClick={() => this.handleModalOpen()}>
+                Create Question
+              </Button>
+            ) : null
           }
         >
           <Modal.Header>Create a new question</Modal.Header>
@@ -80,11 +89,30 @@ class QuestionPage extends React.Component<any, any> {
             <Container>
               <Form>
                 <Form.Field>
-                  <label>Name</label>
+                  <label>Question</label>
                   <input
-                    placeholder="Name"
-                    value={this.state.category_name}
-                    onChange={event => this.onChangeName(event)}
+                    placeholder="Please enter your question"
+                    value={this.state.question}
+                    onChange={event => this.onChangeField("question", event)}
+                  />
+                </Form.Field>
+                <Form.Field>
+                  <label>Suggested Answer</label>
+                  <input
+                    placeholder="Please the suggested answer"
+                    value={this.state.suggested_answer}
+                    onChange={event =>
+                      this.onChangeField("suggested_answer", event)
+                    }
+                  />
+                </Form.Field>
+                <Form.Field>
+                  <label>Max Points</label>
+                  <input
+                    type="number"
+                    placeholder="Please enter the max points awarded"
+                    value={this.state.max_points}
+                    onChange={event => this.onChangeField("max_points", event)}
                   />
                 </Form.Field>
                 <Form.Field>
