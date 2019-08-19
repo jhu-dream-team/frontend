@@ -113,8 +113,12 @@ class QuestionPage extends React.Component<any, any> {
               <Table.Row>
                 <Table.HeaderCell>Name</Table.HeaderCell>
                 <Table.HeaderCell>Suggested Answer</Table.HeaderCell>
-                <Table.HeaderCell>Last Updated</Table.HeaderCell>
-                <Table.HeaderCell>Actions</Table.HeaderCell>
+                <Table.HeaderCell>Max Points</Table.HeaderCell>
+                {this.props.rootStore.userStore.profile.id ==
+                this.props.rootStore.questionCategoryStore.question_category
+                  .owner.id ? (
+                  <Table.HeaderCell>Actions</Table.HeaderCell>
+                ) : null}
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -124,8 +128,11 @@ class QuestionPage extends React.Component<any, any> {
                     <Table.Row key={x.id}>
                       <Table.Cell>{x.question}</Table.Cell>
                       <Table.Cell>{x.suggested_answer}</Table.Cell>
-                      <Table.Cell />
-                      <Table.Cell />
+                      <Table.Cell>{x.max_points}</Table.Cell>
+                      {this.props.rootStore.userStore.profile.id ==
+                      x.owner.id ? (
+                        <Table.Cell />
+                      ) : null}
                     </Table.Row>
                   );
                 }

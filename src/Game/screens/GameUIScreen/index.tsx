@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Button } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
 import ScoreBoard from "../../components/ScoreBoard";
 import Wheel from "../../components/Wheel";
@@ -20,8 +21,11 @@ class GameUI extends React.Component<any, any> {
   render() {
     return (
       <div className={styles["game"]}>
-        {this.props.rootStore.gameStore.game != null ? <Wheel /> : null}
-        <ScoreBoard gameId={this.props.match.params.id} />
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          {this.props.rootStore.gameStore.game != null ? <Wheel /> : null}
+          <ScoreBoard gameId={this.props.match.params.id} />
+        </div>
+        <Button color="green">Spin</Button>
       </div>
     );
   }

@@ -196,6 +196,9 @@ export default class ApolloClient {
             }
           }
         }
+        owner {
+          id
+        }
       }
     }
     `;
