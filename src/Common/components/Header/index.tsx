@@ -18,14 +18,29 @@ export default class Header extends React.PureComponent<any, any> {
         >
           Home
         </Menu.Item>
-        {this.props.rootStore.authStore.isAuthenticated ? (
-          <Menu.Item
-            name="logout"
-            onClick={() => localStorage.removeItem("token")}
-          >
-            Logout
-          </Menu.Item>
-        ) : null}
+        {this.props.rootStore.authStore.isAuthenticated
+          ? [
+              <Menu.Item
+                name="question_categories"
+                active={this.props.rootStore.routingStore.location.pathname.includes(
+                  "categories"
+                )}
+                onClick={() =>
+                  this.props.rootStore.routingStore.replace(
+                    "/question_categories"
+                  )
+                }
+              >
+                Question Categories
+              </Menu.Item>,
+              <Menu.Item
+                name="logout"
+                onClick={() => localStorage.removeItem("token")}
+              >
+                Logout
+              </Menu.Item>
+            ]
+          : null}
       </Menu>
     );
   }

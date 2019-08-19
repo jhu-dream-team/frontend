@@ -144,4 +144,69 @@ export default class ApolloClient {
     `;
     return this.query(queryBody);
   }
+
+  startGame(id) {
+    let queryBody = `
+    mutation {
+      startGame(id: "${id}"){
+        status
+        message
+        code
+      }
+    }
+    `;
+    return this.query(queryBody);
+  }
+
+  queryQuestionCategories() {
+    let queryBody = `
+    query {
+      QuestionCategories(limit: 9999){
+        data {
+          id
+          name
+          questions(limit: 9999) {
+            count
+          }
+        }
+      }
+    }
+    `;
+    return this.query(queryBody);
+  }
+
+  createQuestionCategory(name) {
+    let queryBody = `
+    mutation {
+      createQuestionCategory(name: "${name}"){
+        id
+        name
+        
+      }
+    }
+    `;
+    return this.query(queryBody);
+  }
+
+  createGame(name, question_set_ids) {
+    let queryBody = `
+      mutation($question_set_ids: [String]!) {
+        createGame(name: "${name}", question_categories: $question_set_ids){
+          id
+         name
+         state
+         players(limit: 9999) {
+          count
+          data {
+            id
+          }
+         }
+         owner {
+           id
+         }
+        }
+      }
+    `;
+    return this.query(queryBody, { question_set_ids: question_set_ids });
+  }
 }

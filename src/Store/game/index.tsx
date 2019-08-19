@@ -34,6 +34,7 @@ export default class GameStore {
       this.loading.list = false;
       this.errors.push(err);
     });
+    await this.rootStore.questionCategoryStore.getQuestionCategories();
     this.games = data.data.Games.data;
     this.loading.list = false;
   }
@@ -48,6 +49,20 @@ export default class GameStore {
     });
     this.game = data.data.Game;
     this.loading.game = false;
+  }
+
+  @action
+  async createGame(name, question_category_ids) {
+    this.errors = [];
+    this.loading.list = true;
+    const data = await apolloClient
+      .createGame(name, question_category_ids)
+      .catch(err => {
+        this.loading.list = false;
+        this.errors.push(err);
+      });
+    this.games.push(data.data.createGame);
+    this.loading.list = false;
   }
 
   @computed
@@ -146,6 +161,28 @@ export default class GameStore {
       this.errors.push(err);
     });
     if (data.data.joinGame.status == "Success") {
+      await this.getGames();
+      this.loading.entry.id = "";
+      this.loading.entry.value = false;
+      this.loading.entry.button = "";
+    } else {
+      this.loading.entry.id = "";
+      this.loading.entry.value = false;
+      this.loading.entry.button = "";
+    }
+  }
+
+  async startGame(id) {
+    this.loading.entry.id = id;
+    this.loading.entry.value = true;
+    this.loading.entry.button = "start";
+    const data = await apolloClient.startGame(id).catch(err => {
+      this.loading.entry.id = "";
+      this.loading.entry.value = false;
+      this.loading.entry.button = "";
+      this.errors.push(err);
+    });
+    if (data.data.startGame.status == "Success") {
       await this.getGames();
       this.loading.entry.id = "";
       this.loading.entry.value = false;

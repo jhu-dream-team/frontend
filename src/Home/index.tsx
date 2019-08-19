@@ -19,8 +19,6 @@ class Home extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {
-      games: [],
-      question_categories: [],
       game_name: "",
       selected_question_sets: [],
       modalOpen: false
@@ -46,7 +44,13 @@ class Home extends React.Component<any, any> {
     this.setState({ ...this.state, game_name: event.target.value });
   }
 
-  async onCreateClick() {}
+  async onCreateClick() {
+    this.props.rootStore.gameStore.createGame(
+      this.state.game_name,
+      this.state.selected_question_sets
+    );
+    this.handleModalClose();
+  }
 
   handleModalOpen() {
     this.setState({
@@ -57,7 +61,6 @@ class Home extends React.Component<any, any> {
 
   handleModalClose() {
     this.setState({
-      ...this.state,
       modalOpen: false
     });
   }
@@ -90,15 +93,19 @@ class Home extends React.Component<any, any> {
                 <Form.Field>
                   <label>Question Sets</label>
                 </Form.Field>
-                {this.state.question_categories.map(x => (
-                  <Form.Field>
-                    <Checkbox
-                      checked={this.state.selected_question_sets.includes(x.id)}
-                      onClick={() => this.onChangeCheckbox(x.id)}
-                      label={x.name + "(" + x.questions.length + ")"}
-                    />
-                  </Form.Field>
-                ))}
+                {this.props.rootStore.questionCategoryStore.question_categories.map(
+                  x => (
+                    <Form.Field>
+                      <Checkbox
+                        checked={this.state.selected_question_sets.includes(
+                          x.id
+                        )}
+                        onClick={() => this.onChangeCheckbox(x.id)}
+                        label={x.name + "(" + x.questions.count + ")"}
+                      />
+                    </Form.Field>
+                  )
+                )}
                 <Form.Field>
                   <Button
                     primary
@@ -109,6 +116,9 @@ class Home extends React.Component<any, any> {
                     onClick={() => this.onCreateClick()}
                   >
                     Create Game
+                  </Button>
+                  <Button primary onClick={() => this.handleModalClose()}>
+                    Cancel
                   </Button>
                 </Form.Field>
               </Form>
@@ -140,22 +150,42 @@ class Home extends React.Component<any, any> {
                         .map(y => y.id)
                         .includes(this.props.rootStore.userStore.profile.id) ? (
                         <div>
-                          <Button
-                            onClick={() =>
-                              this.props.rootStore.gameStore.enterGame(x.id)
-                            }
-                            primary
-                            loading={
-                              this.props.rootStore.gameStore.loading.entry.id ==
-                                x.id &&
-                              this.props.rootStore.gameStore.loading.entry
-                                .value &&
-                              this.props.rootStore.gameStore.loading.entry
-                                .button == "enter"
-                            }
-                          >
-                            Enter
-                          </Button>
+                          {x.state == "Started" ? (
+                            <Button
+                              onClick={() =>
+                                this.props.rootStore.gameStore.enterGame(x.id)
+                              }
+                              primary
+                              loading={
+                                this.props.rootStore.gameStore.loading.entry
+                                  .id == x.id &&
+                                this.props.rootStore.gameStore.loading.entry
+                                  .value &&
+                                this.props.rootStore.gameStore.loading.entry
+                                  .button == "enter"
+                              }
+                            >
+                              Enter
+                            </Button>
+                          ) : x.owner.id ==
+                            this.props.rootStore.userStore.profile.id ? (
+                            <Button
+                              primary
+                              loading={
+                                this.props.rootStore.gameStore.loading.entry
+                                  .id == x.id &&
+                                this.props.rootStore.gameStore.loading.entry
+                                  .value &&
+                                this.props.rootStore.gameStore.loading.entry
+                                  .button == "start"
+                              }
+                              onClick={() =>
+                                this.props.rootStore.gameStore.startGame(x.id)
+                              }
+                            >
+                              Start
+                            </Button>
+                          ) : null}
                           {x.state == "Created" &&
                           x.owner.id !=
                             this.props.rootStore.userStore.profile.id ? (
