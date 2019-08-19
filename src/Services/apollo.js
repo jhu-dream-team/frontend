@@ -179,6 +179,29 @@ export default class ApolloClient {
     return this.query(queryBody);
   }
 
+  queryQuestionCategory(id) {
+    let queryBody = `
+    query {
+      QuestionCategory(id: "${id}"){
+        id
+        name
+        questions(limit: 9999) {
+          data {
+            id
+            question
+            suggested_answer
+            max_points
+            owner {
+              id
+            }
+          }
+        }
+      }
+    }
+    `;
+    return this.query(queryBody);
+  }
+
   createQuestionCategory(name) {
     let queryBody = `
     mutation {

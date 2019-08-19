@@ -30,7 +30,9 @@ class QuestionPage extends React.Component<any, any> {
   }
 
   componentDidMount() {
-    this.props.rootStore.questionCategoryStore.getQuestionCategories();
+    this.props.rootStore.questionCategoryStore.getQuestionCategory(
+      this.props.match.params.id
+    );
   }
 
   onCreateClick() {
@@ -54,19 +56,26 @@ class QuestionPage extends React.Component<any, any> {
   }
 
   render() {
-    return (
+    return this.props.rootStore.questionCategoryStore.question_category !=
+      null ? (
       <div style={{ marginLeft: "5%", marginRight: "5%" }}>
-        <h1 className={style["title"]}> My Question Categories </h1>
+        <h1 className={style["title"]}>
+          {" "}
+          {
+            this.props.rootStore.questionCategoryStore.question_category.name
+          }{" "}
+          Questions{" "}
+        </h1>
         <Modal
           open={this.state.modalOpen}
           onClose={() => this.handleModalClose}
           trigger={
             <Button primary onClick={() => this.handleModalOpen()}>
-              Create Question Category
+              Create Question
             </Button>
           }
         >
-          <Modal.Header>Create a new question category</Modal.Header>
+          <Modal.Header>Create a new question</Modal.Header>
           <Modal.Content>
             <Container>
               <Form>
@@ -80,7 +89,7 @@ class QuestionPage extends React.Component<any, any> {
                 </Form.Field>
                 <Form.Field>
                   <Button primary onClick={() => this.onCreateClick()}>
-                    Create Question Category
+                    Create Question
                   </Button>
                   <Button primary onClick={() => this.handleModalClose()}>
                     Cancel
@@ -92,7 +101,10 @@ class QuestionPage extends React.Component<any, any> {
         </Modal>
         <Segment>
           <Dimmer
-            active={this.props.rootStore.questionCategoryStore.loading.list}
+            active={
+              this.props.rootStore.questionCategoryStore.loading
+                .question_category
+            }
           >
             <Loader>Loading</Loader>
           </Dimmer>
@@ -100,30 +112,20 @@ class QuestionPage extends React.Component<any, any> {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>Name</Table.HeaderCell>
-                <Table.HeaderCell># Questions</Table.HeaderCell>
+                <Table.HeaderCell>Suggested Answer</Table.HeaderCell>
                 <Table.HeaderCell>Last Updated</Table.HeaderCell>
                 <Table.HeaderCell>Actions</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {this.props.rootStore.questionCategoryStore.question_categories.map(
+              {this.props.rootStore.questionCategoryStore.question_category.questions.data.map(
                 x => {
                   return (
                     <Table.Row key={x.id}>
-                      <Table.Cell>{x.name}</Table.Cell>
-                      <Table.Cell>{x.questions.count}</Table.Cell>
-                      <Table.Cell>
-                        {dayjs(parseInt(x.updatedAt)).format(
-                          "MM-DD-YYYY h:mm:ss a"
-                        )}
-                      </Table.Cell>
-                      <Table.Cell>
-                        <Button primary>View</Button>
-                        {x.owner.id ==
-                        this.props.rootStore.userStore.profile.id ? (
-                          <Button color="red">Delete</Button>
-                        ) : null}
-                      </Table.Cell>
+                      <Table.Cell>{x.question}</Table.Cell>
+                      <Table.Cell>{x.suggested_answer}</Table.Cell>
+                      <Table.Cell />
+                      <Table.Cell />
                     </Table.Row>
                   );
                 }
@@ -132,7 +134,7 @@ class QuestionPage extends React.Component<any, any> {
           </Table>
         </Segment>
       </div>
-    );
+    ) : null;
   }
 }
 

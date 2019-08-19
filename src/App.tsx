@@ -8,6 +8,7 @@ import { inject, observer } from "mobx-react";
 import Header from "./Common/components/Header";
 import Page404 from "./Common/404";
 import SignUp from "./Authentication/Signup";
+import QuestionCategoryPage from "./QuestionCategory";
 import QuestionPage from "./Question";
 
 @inject("rootStore")
@@ -38,6 +39,11 @@ class App extends React.Component<any, any> {
           <PrivateRoute
             exact
             path="/question_categories"
+            component={QuestionCategoryPage}
+          />
+          <PrivateRoute
+            exact
+            path="/question_categories/:id"
             component={QuestionPage}
           />
           <PrivateRoute exact={false} path="/game/:id" component={GameUI} />

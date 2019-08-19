@@ -223,7 +223,8 @@ class Home extends React.Component<any, any> {
                               x.state != "Created" ||
                               (this.props.rootStore.gameStore.loading.entry
                                 .id != x.id &&
-                                this.props.rootStore.gameStore.loading.entry)
+                                this.props.rootStore.gameStore.loading.entry
+                                  .value)
                             }
                           >
                             Join

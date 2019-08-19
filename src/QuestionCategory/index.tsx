@@ -118,7 +118,16 @@ class QuestionCategoryPage extends React.Component<any, any> {
                         )}
                       </Table.Cell>
                       <Table.Cell>
-                        <Button primary>View</Button>
+                        <Button
+                          onClick={() =>
+                            this.props.rootStore.questionCategoryStore.enterQuestionCategory(
+                              x.id
+                            )
+                          }
+                          primary
+                        >
+                          View
+                        </Button>
                         {x.owner.id ==
                         this.props.rootStore.userStore.profile.id ? (
                           <Button color="red">Delete</Button>

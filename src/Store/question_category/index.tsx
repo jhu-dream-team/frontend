@@ -12,11 +12,19 @@ export default class QuestionCategoryStore {
   }
 
   @observable loading = {
-    list: false
+    list: false,
+    entry: {
+      id: "",
+      value: false,
+      button: ""
+    },
+    question_category: false
   };
   @observable errors: Array<String> = [];
 
   @observable question_categories = [];
+
+  @observable question_category = null;
 
   @action
   async getQuestionCategories() {
@@ -31,6 +39,18 @@ export default class QuestionCategoryStore {
   }
 
   @action
+  async getQuestionCategory(id) {
+    this.errors = [];
+    this.loading.question_category = true;
+    const data = await apolloClient.queryQuestionCategory(id).catch(err => {
+      this.loading.question_category = false;
+      this.errors.push(err);
+    });
+    this.question_category = data.data.QuestionCategory;
+    this.loading.question_category = false;
+  }
+
+  @action
   async createQuestionCategory(name) {
     this.errors = [];
     this.loading.list = true;
@@ -41,5 +61,17 @@ export default class QuestionCategoryStore {
     this.question_categories.push(data.data.createQuestionCategory);
     console.log(this.question_categories);
     this.loading.list = false;
+  }
+
+  async enterQuestionCategory(id) {
+    this.loading.entry.id = id;
+    this.loading.entry.value = true;
+    this.loading.entry.button = "view";
+    await this.getQuestionCategory(id).then(() => {
+      this.loading.entry.id = "";
+      this.loading.entry.value = false;
+      this.loading.entry.button = "";
+      this.rootStore.routingStore.push(`/question_categories/${id}`);
+    });
   }
 }
