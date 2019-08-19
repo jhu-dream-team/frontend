@@ -16,7 +16,7 @@ export default class QuestionCategoryStore {
   };
   @observable errors: Array<String> = [];
 
-  @persist @observable question_categories = [];
+  @observable question_categories = [];
 
   @action
   async getQuestionCategories() {
@@ -38,11 +38,8 @@ export default class QuestionCategoryStore {
       this.loading.list = false;
       this.errors.push(err);
     });
-    if (data.data.createQuestionCategory.status == "Success") {
-      await this.getQuestionCategories();
-      this.loading.list = false;
-    } else {
-      this.loading.list = false;
-    }
+    this.question_categories.push(data.data.createQuestionCategory);
+    console.log(this.question_categories);
+    this.loading.list = false;
   }
 }

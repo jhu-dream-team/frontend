@@ -168,6 +168,10 @@ export default class ApolloClient {
           questions(limit: 9999) {
             count
           }
+          updatedAt
+          owner {
+            id
+          }
         }
       }
     }
@@ -181,7 +185,13 @@ export default class ApolloClient {
       createQuestionCategory(name: "${name}"){
         id
         name
-        
+        questions(limit: 9999) {
+          count
+        }
+        updatedAt
+        owner {
+          id
+        }
       }
     }
     `;

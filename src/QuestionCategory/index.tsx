@@ -16,7 +16,7 @@ const style = require("./styles.scss");
 
 @inject("rootStore")
 @observer
-class QuestionPage extends React.Component<any, any> {
+class QuestionCategoryPage extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {
@@ -136,4 +136,4 @@ class QuestionPage extends React.Component<any, any> {
   }
 }
 
-export default QuestionPage;
+export default QuestionCategoryPage;
