@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as d3 from "d3";
 import { inject, observer } from "mobx-react";
+import { when } from "mobx";
 
 @inject("rootStore")
 @observer
@@ -19,8 +20,8 @@ export default class Wheel extends React.Component<any, any> {
   private imgSize;
   constructor(props) {
     super(props);
-    this.width = window.innerWidth / 1.5;
-    this.height = window.innerWidth / 1.5;
+    this.width = window.innerWidth / 2;
+    this.height = window.innerWidth / 2;
     this.radius = Math.min(this.width, this.height) / 2;
     this.color = "#444444";
     this.innerRadius = 75;
@@ -30,50 +31,14 @@ export default class Wheel extends React.Component<any, any> {
     this.rotationTimeMS = 700;
     this.imgSize = this.radius / 3;
     this.wheelDispatch = d3.dispatch("spin_received", "mouseover", "mouseout");
-    var prizes = [
-      {
-        info: "red",
-        label: "label 1",
-        color: "#6F0000",
-        image:
-          "https://openclipart.org/image/150px/svg_to_png/27530/secretlondon-red-present.png"
-      },
-      {
-        info: "gold",
-        label: "label 2",
-        color: "#837335",
-        image:
-          "https://openclipart.org/image/150px/svg_to_png/27532/secretlondon-Gold-present.png"
-      },
-      {
-        info: "purple",
-        label: "label 3",
-        color: "#4A004A",
-        image:
-          "https://openclipart.org/image/150px/svg_to_png/27534/secretlondon-Purple-present.png"
-      },
-      {
-        info: "green",
-        label: "label 4",
-        color: "#004C00",
-        image:
-          "https://openclipart.org/image/150px/svg_to_png/27533/secretlondon-Green-present.png"
-      },
-      {
-        info: "blue",
-        label: "label 5",
-        color: "#005BB7",
-        image:
-          "https://openclipart.org/image/150px/svg_to_png/26498/Minduka-Present-Blue-Pack.png"
-      }
-    ];
     this.state = {
-      prizes: prizes
+      mounted: false
     };
   }
 
   componentDidMount() {
     this.createWheel(this.props.rootStore.gameStore.wheelCategories);
+    this.setState({ mounted: true });
   }
 
   rotateToId(id) {
@@ -356,6 +321,12 @@ export default class Wheel extends React.Component<any, any> {
   };
 
   render() {
+    if (
+      this.props.rootStore.gameStore.game.current_spin != null &&
+      this.state.mounted
+    ) {
+      this.rotateToId(this.props.rootStore.gameStore.game.current_spin);
+    }
     return (
       <div style={{ marginRight: "25%", marginLeft: "auto" }}>
         <svg

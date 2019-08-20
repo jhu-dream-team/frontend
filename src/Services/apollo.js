@@ -36,6 +36,19 @@ export default class ApolloClient {
       });
   }
 
+  endTurn(id) {
+    let queryBody = `
+    mutation {
+      completeTurn(id: "${id}"){
+        status
+        message
+        code
+      }
+    }
+    `;
+    return this.query(queryBody);
+  }
+
   queryGame(id) {
     let queryBody = `
     query {
@@ -43,12 +56,27 @@ export default class ApolloClient {
         id
         round
         current_spin
+        spins
+        sub_state
+        free_spins(limit: 9999) {
+          data {
+            owner {
+              id
+            }
+            value
+          }
+        }
         question_categories(limit: 9999) {
           data {
             id
             name
           }
         }
+        players(limit: 9999) {
+          data {
+            id
+          }
+        },
         scores(limit: 9999) {
           data {
             id
@@ -56,6 +84,7 @@ export default class ApolloClient {
             round
             value
             owner {
+              id
               firstName
               lastName
             }
@@ -234,6 +263,52 @@ export default class ApolloClient {
         updatedAt
         owner {
           id
+        }
+      }
+    }
+    `;
+    return this.query(queryBody);
+  }
+
+  spinWheel(id) {
+    let queryBody = `
+    mutation {
+      spinWheel(id: "${id}"){
+        id
+        round
+        current_spin
+        spins
+        sub_state
+        question_categories(limit: 9999) {
+          data {
+            id
+            name
+          }
+        }
+        free_spins(limit: 9999) {
+          data {
+            owner {
+              id
+            }
+            value
+          }
+        }
+        players(limit: 9999) {
+          data {
+            id
+          }
+        },
+        scores(limit: 9999) {
+          data {
+            id
+            type
+            round
+            value
+            owner {
+              firstName
+              lastName
+            }
+          }
         }
       }
     }

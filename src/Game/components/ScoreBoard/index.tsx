@@ -42,7 +42,18 @@ class ScoreBoard extends React.PureComponent<any, any> {
                 )
                 .map(x => {
                   return (
-                    <Table.Row key={x.id}>
+                    <Table.Row
+                      key={x.id}
+                      style={
+                        this.props.rootStore.gameStore.game.players.data[
+                          this.props.rootStore.gameStore.game.spins %
+                            this.props.rootStore.gameStore.game.players.data
+                              .length
+                        ].id == x.owner.id
+                          ? { backgroundColor: "lightblue" }
+                          : null
+                      }
+                    >
                       <Table.Cell>
                         {x.owner.firstName + " " + x.owner.lastName}
                       </Table.Cell>

@@ -66,11 +66,18 @@ export default class GameStore {
   }
 
   @computed
+  get freeSpins() {
+    if (this.game == null) {
+      return 0;
+    } else {
+      return this.game.free_spins.data.filter(
+        x => x.owner.id == this.rootStore.userStore.profile.id
+      )[0].value;
+    }
+  }
+
+  @computed
   get wheelCategories() {
-    // return this.game.question_categories.data.slice(
-    //   6 * (this.game.round - 1),
-    //   6 * this.game.round
-    // );
     var default_options = [
       {
         id: "opponent_choice",
@@ -107,10 +114,12 @@ export default class GameStore {
       return default_options;
     }
     var question_categories = [];
-    this.game.question_categories.data.forEach(x => {
-      x["color"] = randomColor();
-      question_categories.push(x);
-    });
+    this.game.question_categories.data
+      .slice(6 * (this.game.round - 1), 6 * this.game.round)
+      .forEach(x => {
+        x["color"] = randomColor();
+        question_categories.push(x);
+      });
     return default_options.concat(question_categories);
   }
 
@@ -170,6 +179,40 @@ export default class GameStore {
       this.loading.entry.value = false;
       this.loading.entry.button = "";
     }
+  }
+
+  async endTurn(id) {
+    this.loading.entry.id = id;
+    this.loading.entry.value = true;
+    this.loading.entry.button = "end";
+    const data = await apolloClient.endTurn(id).catch(err => {
+      this.loading.entry.id = "";
+      this.loading.entry.value = false;
+      this.loading.entry.button = "";
+      this.errors.push(err);
+    });
+    if (data.data.completeTurn.status == "Success") {
+      this.game.spins += 1;
+      this.loading.entry.id = "";
+      this.loading.entry.value = false;
+      this.loading.entry.button = "";
+    }
+  }
+
+  async spinWheel(id) {
+    this.loading.entry.id = id;
+    this.loading.entry.value = true;
+    this.loading.entry.button = "spin";
+    const data = await apolloClient.spinWheel(id).catch(err => {
+      this.loading.entry.id = "";
+      this.loading.entry.value = false;
+      this.loading.entry.button = "";
+      this.errors.push(err);
+    });
+    this.game.current_spin = data.data.spinWheel.current_spin;
+    this.loading.entry.id = "";
+    this.loading.entry.value = false;
+    this.loading.entry.button = "";
   }
 
   async startGame(id) {
