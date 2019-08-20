@@ -1,6 +1,7 @@
 import * as React from "react";
 import {
   Button,
+  Radio,
   Table,
   Modal,
   Form,
@@ -35,6 +36,27 @@ export default class QuestionCategorySelector extends React.Component<any, any> 
           name: "Mock Question Category 3",
           questions: {
             count: 7
+          }
+        },
+        {
+          id: 4,
+          name: "Mock Question Category 4",
+          questions: {
+            count: 8
+          }
+        },
+        {
+          id: 5,
+          name: "Mock Question Category 5",
+          questions: {
+            count: 9
+          }
+        },
+        {
+          id: 6,
+          name: "Mock Question Category 6789",
+          questions: {
+            count: 10
           }
         }
       ]
@@ -76,7 +98,7 @@ export default class QuestionCategorySelector extends React.Component<any, any> 
         </Button>
       }
     >
-      <Modal.Header>Create a new game</Modal.Header>
+      <Modal.Header>Category Selector</Modal.Header>
       <Modal.Content>
         <Container>
           <Form>
@@ -85,8 +107,8 @@ export default class QuestionCategorySelector extends React.Component<any, any> 
             </Form.Field>
             {this.state.question_categories.map(x => (
               <Form.Field>
-                <Checkbox
-                  checked={this.state.selected_question_categories.includes(x.id)}
+                <Radio
+                  checked={this.state.selected_question_category == x.id}
                   label={x.name + "(" + x.questions.count + ")"}
                   onClick={() => this.onChangeCheckbox(x.id)}
                 />
