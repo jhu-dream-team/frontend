@@ -308,6 +308,19 @@ export default class ApolloClient {
     return this.query(queryBody);
   }
 
+  deleteQuestion(id) {
+    let queryBody = `
+    mutation {
+      deleteQuestion(id: "${id}"){
+        status
+        message
+        code
+      }
+    }
+    `;
+    return this.query(queryBody);
+  }
+
   createQuestionCategory(name) {
     let queryBody = `
     mutation {

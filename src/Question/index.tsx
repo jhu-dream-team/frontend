@@ -47,6 +47,20 @@ class QuestionPage extends React.Component<any, any> {
     this.handleModalClose();
   }
 
+  onEditClick(id) {
+    this.props.rootStore.questionCategoryStore.editQuestion(
+      this.state.question,
+      this.state.suggested_answer,
+      this.state.max_points,
+      this.props.match.params.id
+    );
+    this.handleModalClose();
+  }
+
+  onDeleteClick(id) {
+    this.props.rootStore.questionCategoryStore.deleteQuestion(id);
+  }
+
   handleModalOpen() {
     this.setState({
       ...this.state,
@@ -159,7 +173,30 @@ class QuestionPage extends React.Component<any, any> {
                       <Table.Cell>{x.max_points}</Table.Cell>
                       {this.props.rootStore.userStore.profile.id ==
                       x.owner.id ? (
-                        <Table.Cell />
+                        <Table.Cell>
+                          {this.props.rootStore.userStore.profile.id ==
+                          x.owner.id ? (
+                            <Table.Cell>
+                              {this.props.rootStore.userStore.profile.id ==
+                              this.props.rootStore.questionCategoryStore
+                                .question_category.owner.id ? (
+                                <Button
+                                  primary
+                                  onClick={() => this.handleModalOpen()}
+                                >
+                                  Edit Question
+                                </Button>
+                              ) : null}
+                              <Button
+                                color={"red"}
+                                primary
+                                onClick={() => this.onDeleteClick(x.id)}
+                              >
+                                Delete
+                              </Button>
+                            </Table.Cell>
+                          ) : null}
+                        </Table.Cell>
                       ) : null}
                     </Table.Row>
                   );
