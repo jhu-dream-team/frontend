@@ -20,7 +20,11 @@ class QuestionPage extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {
-      modalOpen: false,
+      modalOpen: {
+        create: false,
+        edit: false
+      },
+      id: "",
       question: "",
       suggested_answer: "",
       max_points: 0
@@ -44,33 +48,54 @@ class QuestionPage extends React.Component<any, any> {
       this.state.max_points,
       this.props.match.params.id
     );
-    this.handleModalClose();
+    this.handleModalClose("create");
   }
 
-  onEditClick(id) {
+  openEditModal(x) {
+    this.setState(
+      {
+        id: x.id,
+        question: x.question,
+        suggested_answer: x.suggested_answer,
+        max_points: x.max_points
+      },
+      () => this.handleModalOpen("edit")
+    );
+  }
+
+  onEditClick() {
     this.props.rootStore.questionCategoryStore.editQuestion(
+      this.state.id,
       this.state.question,
       this.state.suggested_answer,
       this.state.max_points,
       this.props.match.params.id
     );
-    this.handleModalClose();
+    this.handleModalClose("edit");
   }
 
   onDeleteClick(id) {
     this.props.rootStore.questionCategoryStore.deleteQuestion(id);
   }
 
-  handleModalOpen() {
+  handleModalOpen(type) {
     this.setState({
       ...this.state,
-      modalOpen: true
+      modalOpen: {
+        [type]: true
+      }
     });
   }
 
-  handleModalClose() {
+  handleModalClose(type) {
     this.setState({
-      modalOpen: false
+      question: "",
+      id: "",
+      suggested_answer: "",
+      max_points: 0,
+      modalOpen: {
+        [type]: false
+      }
     });
   }
 
@@ -85,14 +110,63 @@ class QuestionPage extends React.Component<any, any> {
           }{" "}
           Questions{" "}
         </h1>
+
         <Modal
-          open={this.state.modalOpen}
+          open={this.state.modalOpen.edit}
+          onClose={() => this.handleModalClose}
+        >
+          <Modal.Header>Edit Question</Modal.Header>
+          <Modal.Content>
+            <Container>
+              <Form>
+                <Form.Field>
+                  <label>Question</label>
+                  <input
+                    placeholder="Question name"
+                    value={this.state.question}
+                    onChange={event => this.onChangeField("question", event)}
+                  />
+                </Form.Field>
+                <Form.Field>
+                  <label>Suggested Answer</label>
+                  <input
+                    placeholder="Question answer"
+                    value={this.state.suggested_answer}
+                    onChange={event =>
+                      this.onChangeField("suggested_answer", event)
+                    }
+                  />
+                </Form.Field>
+                <Form.Field>
+                  <label>Max Points</label>
+                  <input
+                    type="number"
+                    placeholder="Question max points awarded"
+                    value={this.state.max_points}
+                    onChange={event => this.onChangeField("max_points", event)}
+                  />
+                </Form.Field>
+                <Form.Field>
+                  <Button primary onClick={() => this.onEditClick()}>
+                    Edit Question
+                  </Button>
+                  <Button primary onClick={() => this.handleModalClose("edit")}>
+                    Cancel
+                  </Button>
+                </Form.Field>
+              </Form>
+            </Container>
+          </Modal.Content>
+        </Modal>
+
+        <Modal
+          open={this.state.modalOpen.create}
           onClose={() => this.handleModalClose}
           trigger={
             this.props.rootStore.userStore.profile.id ==
             this.props.rootStore.questionCategoryStore.question_category.owner
               .id ? (
-              <Button primary onClick={() => this.handleModalOpen()}>
+              <Button primary onClick={() => this.handleModalOpen("open")}>
                 Create Question
               </Button>
             ) : null
@@ -133,7 +207,7 @@ class QuestionPage extends React.Component<any, any> {
                   <Button primary onClick={() => this.onCreateClick()}>
                     Create Question
                   </Button>
-                  <Button primary onClick={() => this.handleModalClose()}>
+                  <Button primary onClick={() => this.handleModalClose("open")}>
                     Cancel
                   </Button>
                 </Form.Field>
@@ -182,7 +256,7 @@ class QuestionPage extends React.Component<any, any> {
                                 .question_category.owner.id ? (
                                 <Button
                                   primary
-                                  onClick={() => this.handleModalOpen()}
+                                  onClick={() => this.openEditModal(x)}
                                 >
                                   Edit Question
                                 </Button>

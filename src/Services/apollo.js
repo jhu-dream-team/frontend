@@ -308,6 +308,25 @@ export default class ApolloClient {
     return this.query(queryBody);
   }
 
+  editQuestion(
+    id,
+    question,
+    suggested_answer,
+    max_points,
+    question_category_id
+  ) {
+    let queryBody = `
+    mutation {
+    updateQuestion(id: "${id}", question: "${question}", suggested_answer: "${suggested_answer}", max_points: ${max_points}, question_category_id: "${question_category_id}"){
+        status
+        message
+        code
+      }
+    }
+    `;
+    return this.query(queryBody);
+  }
+
   deleteQuestion(id) {
     let queryBody = `
     mutation {

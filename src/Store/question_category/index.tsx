@@ -108,6 +108,47 @@ export default class QuestionCategoryStore {
     }
   }
 
+  @action
+  async editQuestion(
+    id,
+    question,
+    suggested_answer,
+    max_points,
+    question_category_id
+  ) {
+    this.errors = [];
+    this.loading.question_category = true;
+    const data = await apolloClient
+      .editQuestion(
+        id,
+        question,
+        suggested_answer,
+        max_points,
+        question_category_id
+      )
+      .catch(err => {
+        console.log(err);
+        this.loading.question_category = false;
+        this.errors.push(err);
+      });
+    if (data.data.deleteQuestion.status == "Success") {
+      var idx = this.question_category.questions.data
+        .map(x => x.id)
+        .indexOf(id);
+      this.question_category.questions.data[idx] = {
+        id,
+        question,
+        suggested_answer,
+        max_points,
+        question_category_id
+      };
+    } else {
+      this.loading.question_category = false;
+    }
+    this.question_category.questions.data.push(data.data.editQuestion);
+    this.loading.question_category = false;
+  }
+
   async enterQuestionCategory(id) {
     this.loading.entry.id = id;
     this.loading.entry.value = true;
