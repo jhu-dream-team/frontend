@@ -5,7 +5,8 @@ export default class ApolloClient {
   constructor(props) {
     ApolloClient.instance = this;
     this.override_token = null;
-    const uri = "http://localhost:5000/wheelofjeopardy/us-central1/api/graphql";
+    const uri =
+      "https://us-central1-wheelofjeopardy.cloudfunctions.net/api/graphql";
     this.client = createApolloFetch({ uri });
     this.client.use(async ({ request, options }, next) => {
       if (!options.headers) {

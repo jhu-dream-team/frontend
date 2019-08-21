@@ -6,6 +6,7 @@ import VotingModal from "../../components/VotingModal";
 import ScoreBoard from "../../components/ScoreBoard";
 import Wheel from "../../components/Wheel";
 import ChoiceModal from "../../components/ChoiceModal";
+import JeopardyBoard from "../../components/JeopardyBoard";
 const styles = require("./styles.scss");
 
 @inject("rootStore")
@@ -67,7 +68,13 @@ class GameUI extends React.Component<any, any> {
             ].id == this.props.rootStore.userStore.profile.id) ? (
             <ChoiceModal />
           ) : null}
-          {this.props.rootStore.gameStore.game != null ? <Wheel /> : null}
+          {this.props.rootStore.gameStore.game != null ? (
+            this.props.rootStore.gameStore.game.selected_question == null ? (
+              <Wheel />
+            ) : (
+              <JeopardyBoard />
+            )
+          ) : null}
           <ScoreBoard gameId={this.props.match.params.id} />
         </div>
         {this.props.rootStore.gameStore.game != null &&
