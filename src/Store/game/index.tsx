@@ -78,6 +78,59 @@ export default class GameStore {
     }
   }
 
+  async useFreeSpin() {
+    this.errors = [];
+    this.loading.entry.id = this.game.id;
+    this.loading.entry.value = true;
+    this.loading.entry.button = "free_spin";
+    const data = await apolloClient.useFreeSpin(this.game.id).catch(err => {
+      this.errors.push(err);
+      this.loading.entry.id = "";
+      this.loading.entry.value = false;
+      this.loading.entry.button = "";
+    });
+    this.game.selected_question = data.data.useFreeSpin.selected_question;
+    this.game.current_spin = data.data.useFreeSpin.current_spin;
+    this.game.spins = data.data.useFreeSpin.spins;
+    this.game.sub_state = data.data.useFreeSpin.sub_state;
+    this.game.free_spins = data.data.useFreeSpin.free_spins;
+    this.loading.entry.id = "";
+    this.loading.entry.value = false;
+    this.loading.entry.button = "";
+  }
+
+  async selectCategory(category_id) {
+    const data = await apolloClient
+      .selectCategory(this.game.id, category_id)
+      .catch(err => {
+        this.errors.push(err);
+      });
+    this.game.selected_question = data.data.selectCategory.selected_question;
+    this.game.current_spin = data.data.selectCategory.current_spin;
+    this.game.spins = data.data.selectCategory.spins;
+    this.game.sub_state = data.data.selectCategory.sub_state;
+  }
+
+  getRemainingQuestions(category_id) {
+    if (this.rootStore.questionCategoryStore.question_categories.length == 0) {
+      return 0;
+    }
+    var idx = this.rootStore.questionCategoryStore.question_categories
+      .map(x => x.id)
+      .indexOf(category_id);
+    var questions_ids = this.rootStore.questionCategoryStore.question_categories[
+      idx
+    ].questions.data.map(x => x.id);
+    var answered_question_ids = this.game.answers.data.map(x => x.question.id);
+    var filtered_questions = [];
+    questions_ids.forEach(x => {
+      if (answered_question_ids.indexOf(x) == -1) {
+        filtered_questions.push(x);
+      }
+    });
+    return filtered_questions.length;
+  }
+
   @computed
   get wheelCategories() {
     var default_options = [
@@ -212,7 +265,9 @@ export default class GameStore {
       this.loading.entry.button = "";
       this.errors.push(err);
     });
+    this.game.selected_question = data.data.spinWheel.selected_question;
     this.game.current_spin = data.data.spinWheel.current_spin;
+    this.game.spins = data.data.spinWheel.spins;
     this.game.sub_state = data.data.spinWheel.sub_state;
     this.loading.entry.id = "";
     this.loading.entry.value = false;

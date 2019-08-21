@@ -62,7 +62,7 @@ class ScoreBoard extends React.PureComponent<any, any> {
                       <Table.Cell>
                         {x.owner.firstName + " " + x.owner.lastName}
                       </Table.Cell>
-                      <Table.Cell>{x.value}</Table.Cell>
+                      <Table.Cell>{x.value * x.modifier}</Table.Cell>
                     </Table.Row>
                   );
                 })

@@ -10,7 +10,7 @@ export default class Header extends React.PureComponent<any, any> {
     return (
       <Menu>
         <Menu.Item
-          name="home"
+          key="home"
           active={this.props.rootStore.routingStore.location.pathname.includes(
             "home"
           )}
@@ -21,7 +21,7 @@ export default class Header extends React.PureComponent<any, any> {
         {this.props.rootStore.authStore.isAuthenticated
           ? [
               <Menu.Item
-                name="question_categories"
+                key="question_categories"
                 active={this.props.rootStore.routingStore.location.pathname.includes(
                   "categories"
                 )}
@@ -34,7 +34,7 @@ export default class Header extends React.PureComponent<any, any> {
                 Question Categories
               </Menu.Item>,
               <Menu.Item
-                name="logout"
+                key="logout"
                 onClick={() => localStorage.removeItem("token")}
               >
                 Logout

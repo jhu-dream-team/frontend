@@ -117,6 +117,12 @@ export default class ApolloClient {
           data {
             id
             name
+            questions(limit: 9999) {
+              count
+              data {
+                id
+              }
+            }
           }
         }
         players(limit: 9999) {
@@ -129,6 +135,7 @@ export default class ApolloClient {
             id
             type
             round
+            modifier
             value
             owner {
               id
@@ -243,6 +250,9 @@ export default class ApolloClient {
           name
           questions(limit: 9999) {
             count
+            data {
+              id
+            }
           }
           updatedAt
           owner {
@@ -336,6 +346,128 @@ export default class ApolloClient {
           data {
             id
             name
+            questions(limit: 9999) {
+              count
+              data {
+                id
+              }
+            }
+          }
+        }
+        free_spins(limit: 9999) {
+          data {
+            owner {
+              id
+            }
+            value
+          }
+        }
+        players(limit: 9999) {
+          data {
+            id
+          }
+        },
+        scores(limit: 9999) {
+          data {
+            id
+            type
+            round
+            value
+            owner {
+              firstName
+              lastName
+            }
+          }
+        }
+      }
+    }
+    `;
+    return this.query(queryBody);
+  }
+
+  useFreeSpin(id) {
+    let queryBody = `
+      mutation {
+        useFreeSpin(id: "${id}"){
+          id
+        round
+        current_spin
+        spins
+        sub_state
+        selected_question {
+          id
+          question
+          max_points
+          suggested_answer
+        }
+        question_categories(limit: 9999) {
+          data {
+            id
+            name
+            questions(limit: 9999) {
+              count
+              data {
+                id
+              }
+            }
+          }
+        }
+        free_spins(limit: 9999) {
+          data {
+            owner {
+              id
+            }
+            value
+          }
+        }
+        players(limit: 9999) {
+          data {
+            id
+          }
+        },
+        scores(limit: 9999) {
+          data {
+            id
+            type
+            round
+            value
+            owner {
+              firstName
+              lastName
+            }
+          }
+        }
+        }
+      }
+    `;
+    return this.query(queryBody);
+  }
+
+  selectCategory(id, category_id) {
+    let queryBody = `
+    mutation {
+      selectCategory(id: "${id}", category_id: "${category_id}"){
+        id
+        round
+        current_spin
+        spins
+        sub_state
+        selected_question {
+          id
+          question
+          max_points
+          suggested_answer
+        }
+        question_categories(limit: 9999) {
+          data {
+            id
+            name
+            questions(limit: 9999) {
+              count
+              data {
+                id
+              }
+            }
           }
         }
         free_spins(limit: 9999) {

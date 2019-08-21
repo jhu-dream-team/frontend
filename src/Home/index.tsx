@@ -95,7 +95,7 @@ class Home extends React.Component<any, any> {
                 </Form.Field>
                 {this.props.rootStore.questionCategoryStore.question_categories.map(
                   x => (
-                    <Form.Field>
+                    <Form.Field key={x.id}>
                       <Checkbox
                         checked={this.state.selected_question_sets.includes(
                           x.id

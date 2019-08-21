@@ -48,7 +48,7 @@ export default class AuthStore {
           window.location.replace("/");
         }
       }
-    }, 15000);
+    }, 1000);
 
     setInterval(() => {
       if (firebase.auth().currentUser != null) {
@@ -98,7 +98,7 @@ export default class AuthStore {
       .then(async userCredential => {
         this.profile.id = userCredential.user.uid;
         this.loading = false;
-        this.rootStore.routingStore.push("/");
+        window.location.replace("/");
       })
       .catch(err => {
         console.log("Authentication Error: ", err);

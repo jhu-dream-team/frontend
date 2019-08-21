@@ -5,6 +5,7 @@ import AnswerModal from "../../components/AnswerModal";
 import VotingModal from "../../components/VotingModal";
 import ScoreBoard from "../../components/ScoreBoard";
 import Wheel from "../../components/Wheel";
+import ChoiceModal from "../../components/ChoiceModal";
 const styles = require("./styles.scss");
 
 @inject("rootStore")
@@ -51,6 +52,21 @@ class GameUI extends React.Component<any, any> {
             .includes(this.props.rootStore.userStore.id) ? (
             <VotingModal />
           ) : null}
+          {(this.props.rootStore.gameStore.game != null &&
+            (this.props.rootStore.gameStore.game.sub_state == "Player Choice" &&
+              this.props.rootStore.gameStore.game.players.data[
+                this.props.rootStore.gameStore.game.spins %
+                  this.props.rootStore.gameStore.game.players.data.length
+              ].id == this.props.rootStore.userStore.profile.id)) ||
+          (this.props.rootStore.gameStore.game != null &&
+            this.props.rootStore.gameStore.game.sub_state ==
+              "Opponent Choice" &&
+            this.props.rootStore.gameStore.game.players.data[
+              (this.props.rootStore.gameStore.game.spins + 1) %
+                this.props.rootStore.gameStore.game.players.data.length
+            ].id == this.props.rootStore.userStore.profile.id) ? (
+            <ChoiceModal />
+          ) : null}
           {this.props.rootStore.gameStore.game != null ? <Wheel /> : null}
           <ScoreBoard gameId={this.props.match.params.id} />
         </div>
@@ -89,7 +105,32 @@ class GameUI extends React.Component<any, any> {
               </Button>
             ) : null}
             <Button as="div" labelPosition={"right"}>
-              <Button size={"huge"} color="pink" disabled={true}>
+              <Button
+                size={"huge"}
+                color="pink"
+                loading={
+                  this.props.rootStore.gameStore.loading.entry.button ==
+                  "free_spin"
+                }
+                disabled={
+                  this.props.rootStore.gameStore.freeSpins == 0 ||
+                  this.props.rootStore.gameStore.game.players.data[
+                    this.props.rootStore.gameStore.game.spins %
+                      this.props.rootStore.gameStore.game.players.data.length
+                  ].id != this.props.rootStore.userStore.profile.id ||
+                  (this.props.rootStore.gameStore.game.current_spin !=
+                    "lose_turn" &&
+                    (this.props.rootStore.gameStore.game.selected_question ==
+                      null ||
+                      this.props.rootStore.gameStore.answers.data.filter(
+                        x =>
+                          x.question.id ==
+                          this.props.rootStore.gameStore.game.selected_question
+                            .id
+                      ).award == 0))
+                }
+                onClick={() => this.props.rootStore.gameStore.useFreeSpin()}
+              >
                 Use Free Spin
               </Button>
               <Label size={"huge"} as="a" basic pointing={"left"}>
@@ -114,8 +155,8 @@ class GameUI extends React.Component<any, any> {
             (this.props.rootStore.gameStore.game.sub_state ==
               "Opponent Choice" &&
               this.props.rootStore.gameStore.game.players.data[
-                this.props.rootStore.gameStore.game.spins +
-                  (1 % this.props.rootStore.gameStore.game.players.data.length)
+                (this.props.rootStore.gameStore.game.spins + 1) %
+                  this.props.rootStore.gameStore.game.players.data.length
               ].id == this.props.rootStore.userStore.profile.id) ||
             (this.props.rootStore.gameStore.game.sub_state == "Voting" &&
               this.props.rootStore.gameStore.game.players.data[
