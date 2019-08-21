@@ -4,14 +4,15 @@ import * as firebase from "firebase";
 export default class ApolloClient {
   constructor(props) {
     ApolloClient.instance = this;
-    const uri =
-      "https://us-central1-wheelofjeopardy.cloudfunctions.net/api/graphql";
+    this.override_token = null;
+    const uri = "http://localhost:5000/wheelofjeopardy/us-central1/api/graphql";
     this.client = createApolloFetch({ uri });
     this.client.use(async ({ request, options }, next) => {
       if (!options.headers) {
         options.headers = {};
       }
-      var token = localStorage.getItem("token");
+      var token = "";
+      token = localStorage.getItem("token");
       options.headers["authorization"] = "Bearer " + token;
       next();
     });
@@ -49,6 +50,31 @@ export default class ApolloClient {
     return this.query(queryBody);
   }
 
+  submitAnswer(game_id, answer) {
+    let queryBody = `
+    mutation {
+      answerQuestion(id: "${game_id}", answer: "${answer}"){
+        id
+        sub_state
+      }
+    }
+    `;
+    return this.query(queryBody);
+  }
+
+  submitVote(game_id, bool) {
+    let queryBody = `
+    mutation {
+      voteAnswer(id: "${game_id}", correct: ${bool}){
+        status
+        message
+        code
+      }
+    }
+    `;
+    return this.query(queryBody);
+  }
+
   queryGame(id) {
     let queryBody = `
     query {
@@ -58,6 +84,27 @@ export default class ApolloClient {
         current_spin
         spins
         sub_state
+        answers(limit: 9999) {
+          data {
+            id
+            value
+            question {
+              id
+            }
+            votes {
+              id
+              owner {
+                id
+              }
+            }
+          }
+        }
+        selected_question {
+          id
+          question
+          max_points
+          suggested_answer
+        }
         free_spins(limit: 9999) {
           data {
             owner {
@@ -279,6 +326,12 @@ export default class ApolloClient {
         current_spin
         spins
         sub_state
+        selected_question {
+          id
+          question
+          max_points
+          suggested_answer
+        }
         question_categories(limit: 9999) {
           data {
             id
@@ -312,6 +365,21 @@ export default class ApolloClient {
         }
       }
     }
+    `;
+    return this.query(queryBody);
+  }
+
+  createProfile(user_id, firstName, lastName, email, deviceToken) {
+    let queryBody = `
+      mutation {
+        createProfile(user_id: "${user_id}", firstName: "${firstName}", lastName: "${lastName}", email: "${email}", deviceToken: "${deviceToken}"){
+          id
+          firstName
+          lastName
+          email
+          profileImg
+        }
+      }
     `;
     return this.query(queryBody);
   }

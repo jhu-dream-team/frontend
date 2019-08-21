@@ -19,7 +19,9 @@ export default class GameStore {
       value: false,
       button: ""
     },
-    game: false
+    answer: false,
+    game: false,
+    vote: false
   };
   @observable errors: Array<String> = [];
 
@@ -193,6 +195,7 @@ export default class GameStore {
     });
     if (data.data.completeTurn.status == "Success") {
       this.game.spins += 1;
+      this.game.sub_state = "Waiting";
       this.loading.entry.id = "";
       this.loading.entry.value = false;
       this.loading.entry.button = "";
@@ -210,9 +213,36 @@ export default class GameStore {
       this.errors.push(err);
     });
     this.game.current_spin = data.data.spinWheel.current_spin;
+    this.game.sub_state = data.data.spinWheel.sub_state;
     this.loading.entry.id = "";
     this.loading.entry.value = false;
     this.loading.entry.button = "";
+  }
+
+  async submitVote(bool) {
+    this.loading.vote = true;
+    const data = await apolloClient
+      .submitVote(this.game.id, bool)
+      .catch(err => {
+        this.loading.vote = false;
+        this.errors.push(err);
+      });
+    if (data.data.voteAnswer.status == "Success") {
+      this.loading.answer = false;
+      this.game.sub_state = "Awaiting Completion By Player";
+    }
+  }
+
+  async submitAnswer(answer) {
+    this.loading.answer = true;
+    const data = await apolloClient
+      .submitAnswer(this.game.id, answer)
+      .catch(err => {
+        this.loading.answer = false;
+        this.errors.push(err);
+      });
+    this.loading.answer = false;
+    this.game.sub_state = "Voting";
   }
 
   async startGame(id) {

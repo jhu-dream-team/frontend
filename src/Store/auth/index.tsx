@@ -1,5 +1,6 @@
 import { computed, observable, action } from "mobx";
 import { persist } from "mobx-persist";
+import ApolloClient from "../../Services/apollo";
 import * as firebase from "firebase";
 
 const config = {
@@ -13,6 +14,8 @@ const config = {
 };
 
 firebase.initializeApp(config);
+
+const apolloClient = ApolloClient.getInstance();
 
 export default class AuthStore {
   private unsubscribe;
@@ -45,7 +48,7 @@ export default class AuthStore {
           window.location.replace("/");
         }
       }
-    }, 1000);
+    }, 15000);
 
     setInterval(() => {
       if (firebase.auth().currentUser != null) {
@@ -113,8 +116,29 @@ export default class AuthStore {
       .createUserWithEmailAndPassword(email, password)
       .then(async userCredential => {
         this.profile.id = userCredential.user.uid;
-        this.loading = false;
-        window.location.replace("/");
+        var token = await userCredential.user.getIdToken();
+        localStorage.setItem("token", token);
+        return apolloClient
+          .createProfile(
+            this.profile.id,
+            firstName,
+            lastName,
+            email,
+            null,
+            token
+          )
+          .then(() => {
+            this.profile.firstName = firstName;
+            this.profile.lastName = lastName;
+            this.profile.email = email;
+            this.loading = false;
+            window.location.replace("/");
+          })
+          .catch(err => {
+            this.loading = false;
+            this.errors.push(err);
+            window.location.replace("/");
+          });
       })
       .catch(err => {
         console.log("Registration Error: ", err);

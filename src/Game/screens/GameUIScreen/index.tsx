@@ -1,6 +1,8 @@
 import * as React from "react";
 import { Button, Label } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
+import AnswerModal from "../../components/AnswerModal";
+import VotingModal from "../../components/VotingModal";
 import ScoreBoard from "../../components/ScoreBoard";
 import Wheel from "../../components/Wheel";
 const styles = require("./styles.scss");
@@ -30,9 +32,32 @@ class GameUI extends React.Component<any, any> {
     return (
       <div className={styles["game"]}>
         <div style={{ display: "flex", flexDirection: "row" }}>
+          {this.props.rootStore.gameStore.game != null &&
+          this.props.rootStore.gameStore.game.sub_state == "Answering" ? (
+            <AnswerModal />
+          ) : null}
+          {this.props.rootStore.gameStore.game != null &&
+          this.props.rootStore.gameStore.game.sub_state == "Voting" &&
+          this.props.rootStore.gameStore.game.players.data[
+            this.props.rootStore.gameStore.game.spins %
+              this.props.rootStore.gameStore.game.players.data.length
+          ].id != this.props.rootStore.userStore.profile.id &&
+          !this.props.rootStore.gameStore.game.answers.data[
+            this.props.rootStore.gameStore.game.answers.data
+              .map(x => x.question.id)
+              .indexOf(this.props.rootStore.gameStore.game.selected_question.id)
+          ].votes
+            .map(x => x.owner.id)
+            .includes(this.props.rootStore.userStore.id) ? (
+            <VotingModal />
+          ) : null}
           {this.props.rootStore.gameStore.game != null ? <Wheel /> : null}
           <ScoreBoard gameId={this.props.match.params.id} />
         </div>
+        {this.props.rootStore.gameStore.game != null &&
+        this.props.rootStore.gameStore.game.sub_state == "Voting" ? (
+          <div style={{ textAlign: "center" }}>Voting in progress...</div>
+        ) : null}
         {this.props.rootStore.gameStore.game != null ? (
           <div
             style={{
@@ -71,7 +96,11 @@ class GameUI extends React.Component<any, any> {
                 {this.props.rootStore.gameStore.freeSpins}
               </Label>
             </Button>
-            {this.props.rootStore.gameStore.game.sub_state == "Answering" ? (
+            {this.props.rootStore.gameStore.game.sub_state == "Answering" &&
+            this.props.rootStore.gameStore.game.players.data[
+              this.props.rootStore.gameStore.game.spins %
+                this.props.rootStore.gameStore.game.players.data.length
+            ].id == this.props.rootStore.userStore.profile.id ? (
               <Button size={"huge"} color={"blue"}>
                 Answer
               </Button>

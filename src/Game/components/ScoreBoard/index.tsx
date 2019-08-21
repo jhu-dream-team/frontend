@@ -26,6 +26,11 @@ class ScoreBoard extends React.PureComponent<any, any> {
         <Dimmer active={this.props.rootStore.gameStore.loading.game}>
           <Loader>Loading</Loader>
         </Dimmer>
+        {this.props.rootStore.gameStore.game != null ? (
+          <div>
+            Current Spin: {this.props.rootStore.gameStore.game.spins + 1}{" "}
+          </div>
+        ) : null}
         <Table celled>
           <Table.Header>
             <Table.Row>

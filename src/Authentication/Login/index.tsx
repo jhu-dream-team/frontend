@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as validatejs from "validate.js";
+import { Link } from "react-router-dom";
 import { Container, Button, Form, Icon } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
 const style = require("./styles.scss");
@@ -126,6 +127,9 @@ class Login extends React.Component<any, any> {
                 {this.props.rootStore.authStore.errors[0]}
               </p>
             )}
+            <div>
+              Don't have an account? <Link to={"/signup"}> Click Here </Link>
+            </div>
           </Form>
         </Container>
       </div>

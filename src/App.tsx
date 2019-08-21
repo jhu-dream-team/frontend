@@ -47,7 +47,7 @@ class App extends React.Component<any, any> {
             component={QuestionPage}
           />
           <PrivateRoute exact={false} path="/game/:id" component={GameUI} />
-          {localStorage.getItem("token") == null
+          {!this.props.rootStore.authStore.isAuthenticated
             ? [
                 <Route key={1} path="/login" component={Login} />,
                 <Route key={2} path="/signup" component={SignUp} />
