@@ -130,7 +130,7 @@ class QuestionCategoryPage extends React.Component<any, any> {
                         </Button>
                         {x.owner.id ==
                         this.props.rootStore.userStore.profile.id ? (
-                          <Button color="red">Delete</Button>
+                          <Button color={"red"}>Delete</Button>
                         ) : null}
                       </Table.Cell>
                     </Table.Row>

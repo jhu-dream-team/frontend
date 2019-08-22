@@ -5,7 +5,8 @@ export default class ApolloClient {
   constructor(props) {
     ApolloClient.instance = this;
     this.override_token = null;
-    const uri = "http://localhost:5000/wheelofjeopardy/us-central1/api/graphql";
+    const uri =
+      "https://us-central1-wheelofjeopardy.cloudfunctions.net/api/graphql";
     this.client = createApolloFetch({ uri });
     this.client.use(async ({ request, options }, next) => {
       if (!options.headers) {
@@ -121,6 +122,8 @@ export default class ApolloClient {
               count
               data {
                 id
+                max_points
+                question
               }
             }
           }
@@ -317,7 +320,7 @@ export default class ApolloClient {
   ) {
     let queryBody = `
     mutation {
-    updateQuestion(id: "${id}", question: "${question}", suggested_answer: "${suggested_answer}", max_points: ${max_points}, question_category_id: "${question_category_id}"){
+    updateQuestion(id: "${id}", question: "${question}", suggested_answer: "${suggested_answer}", max_points: ${max_points}, question_category: "${question_category_id}"){
         status
         message
         code
@@ -382,6 +385,8 @@ export default class ApolloClient {
               count
               data {
                 id
+                max_points
+                question
               }
             }
           }
@@ -440,6 +445,8 @@ export default class ApolloClient {
               count
               data {
                 id
+                max_points
+                question
               }
             }
           }
@@ -498,6 +505,8 @@ export default class ApolloClient {
               count
               data {
                 id
+                max_points
+                question
               }
             }
           }

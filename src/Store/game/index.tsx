@@ -50,6 +50,10 @@ export default class GameStore {
       this.errors.push(err);
     });
     this.game = data.data.Game;
+    console.log(data.data.Game);
+    if (data.data.Game.answers.data == null) {
+      this.game.answers.data = [];
+    }
     this.loading.game = false;
   }
 

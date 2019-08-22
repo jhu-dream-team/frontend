@@ -263,7 +263,6 @@ class QuestionPage extends React.Component<any, any> {
                               ) : null}
                               <Button
                                 color={"red"}
-                                primary
                                 onClick={() => this.onDeleteClick(x.id)}
                               >
                                 Delete

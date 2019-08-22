@@ -131,7 +131,7 @@ export default class QuestionCategoryStore {
         this.loading.question_category = false;
         this.errors.push(err);
       });
-    if (data.data.deleteQuestion.status == "Success") {
+    if (data.data.updateQuestion.status == "Success") {
       var idx = this.question_category.questions.data
         .map(x => x.id)
         .indexOf(id);
@@ -140,12 +140,12 @@ export default class QuestionCategoryStore {
         question,
         suggested_answer,
         max_points,
-        question_category_id
+        question_category_id,
+        owner: this.question_category.questions.data[idx].owner
       };
     } else {
       this.loading.question_category = false;
     }
-    this.question_category.questions.data.push(data.data.editQuestion);
     this.loading.question_category = false;
   }
 

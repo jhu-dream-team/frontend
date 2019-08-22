@@ -61,11 +61,12 @@ export default class ChoiceModal extends React.Component<any, any> {
                   6 * this.props.rootStore.gameStore.game.round
                 )
                 .map(x =>
-                  x.questions.data.filter(
-                    z =>
-                      !this.props.rootStore.gameStore.game.answers.data
-                        .map(y => y.question.id)
-                        .includes(z.id)
+                  x.questions.data.filter(z =>
+                    this.props.rootStore.gameStore.game.answers.data != null
+                      ? !this.props.rootStore.gameStore.game.answers.data
+                          .map(y => y.question.id)
+                          .includes(z.id)
+                      : false
                   ).length > 0 ? (
                     <Form.Field>
                       <Radio
