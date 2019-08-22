@@ -35,6 +35,11 @@ export default class NotificationManager {
         console.log(err);
       });
     });
+
+    // this.watchMessage = this.messaging.onMessage((payload) => {
+    //   console.log("received", payload);
+    //   }
+    // );
   }
 
   static getInstance() {

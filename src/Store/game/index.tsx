@@ -224,7 +224,7 @@ export default class GameStore {
       this.loading.entry.button = "";
       this.errors.push(err);
     });
-    if (data.data.joinGame.status == "Success") {
+    if (data.data.leaveGame.status == "Success") {
       await this.getGames();
       this.loading.entry.id = "";
       this.loading.entry.value = false;

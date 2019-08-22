@@ -207,6 +207,9 @@ class Home extends React.Component<any, any> {
                                 this.props.rootStore.gameStore.loading.entry
                                   .button != "leave"
                               }
+                              onClick={() =>
+                                this.props.rootStore.gameStore.leaveGame(x.id)
+                              }
                             >
                               Leave
                             </Button>

@@ -42,6 +42,11 @@ export default class VoteModal extends React.Component<any, any> {
           <br />
           Suggested Answer:{" "}
           {
+            this.props.rootStore.gameStore.game.selected_question
+              .suggested_answer
+          }
+          Player Answer:{" "}
+          {
             this.props.rootStore.gameStore.game.answers.data[
               this.props.rootStore.gameStore.game.answers.data
                 .map(x => x.question.id)

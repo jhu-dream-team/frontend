@@ -120,6 +120,7 @@ class GameUI extends React.Component<any, any> {
                   "free_spin"
                 }
                 disabled={
+                  !this.props.rootStore.gameStore.game.sub_state.includes("Awaiting") ||
                   this.props.rootStore.gameStore.freeSpins == 0 ||
                   this.props.rootStore.gameStore.game.players.data[
                     this.props.rootStore.gameStore.game.spins %
@@ -129,12 +130,13 @@ class GameUI extends React.Component<any, any> {
                     "lose_turn" &&
                     (this.props.rootStore.gameStore.game.selected_question ==
                       null ||
-                      this.props.rootStore.gameStore.answers.data.filter(
-                        x =>
-                          x.question.id ==
-                          this.props.rootStore.gameStore.game.selected_question
-                            .id
-                      ).award == 0))
+                      (this.props.rootStore.gameStore.answers != null &&
+                        this.props.rootStore.gameStore.answers.data.filter(
+                          x =>
+                            x.question.id ==
+                            this.props.rootStore.gameStore.game
+                              .selected_question.id
+                        ).award == 0)))
                 }
                 onClick={() => this.props.rootStore.gameStore.useFreeSpin()}
               >
